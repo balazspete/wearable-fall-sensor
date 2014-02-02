@@ -1,4 +1,4 @@
-package com.example.wearablefallsensor;
+package com.example.wearablesensorbase;
 
 import android.os.Bundle;
 import android.app.Activity;
