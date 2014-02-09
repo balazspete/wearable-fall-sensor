@@ -4,5 +4,28 @@
     <string name="app_name">Wearable Sensor Base</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    
+    <string name="title_activity_grapher">Data Grapher</string>
+    
+    <string name="simulator_start">Start simulator</string>
+    <string name="simulator_starting">Simulator started</string>
+    <string name="simulator_stop">Stop simulator</string>
+    <string name="simulator_stopping">Simulator stopped</string>
+    <string name="action_grapher">Sensor Graphs</string>
+    
+    <string name="graph_summary">Sensor feed</string>
+    <string name="graph_acceleration">Acceleration (X, Y, Z)</string>
+    <string name="graph_orientation">Orientation (X, Y, Z)</string>
+    <string name="graph_loudness">Loudness</string>
+    
+    <string name="acceleration_x">Acceleration - X axis</string>
+    <string name="acceleration_y">Acceleration - Y axis</string>
+    <string name="acceleration_z">Acceleration - Z axis</string>
+    
+    <string name="orientation_x">Orientation - X axis</string>
+    <string name="orientation_y">Orientation - Y axis</string>
+    <string name="orientation_z">Orientation - Z axis</string>
+    
+    <string name="loudness">Loudness</string>
 
 </resources>
