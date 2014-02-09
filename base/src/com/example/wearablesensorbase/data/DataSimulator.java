@@ -4,8 +4,15 @@ import android.util.Log;
 
 import com.example.wearablesensorbase.WearableSensorBase;
 
+/**
+ * An object to generate random double values periodically 
+ * @author Balazs Pete
+ *
+ */
 public class DataSimulator extends Thread {
 
+	public static final int SLEEP_TIME = 500;
+	
 	private WearableSensorBase app;
 	private String sensorId;
 	private boolean simulate = false;
@@ -26,7 +33,7 @@ public class DataSimulator extends Thread {
 			app.addMeasurement(sensorId, dummyData);
 			Log.i("DataSimulator", "Adding data for " + sensorId);
 			try {
-				sleep(500);
+				sleep(SLEEP_TIME);
 			} catch (InterruptedException e) {
 				Log.e("DataSimulator", "Failed to go to sleep");
 			}

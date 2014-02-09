@@ -9,4 +9,9 @@ import java.io.Serializable;
  */
 public abstract class Event implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7988346460573008082L;
+
 }

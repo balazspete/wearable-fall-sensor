@@ -10,6 +10,11 @@ import com.example.wearablesensorbase.events.MeasurementEventListener;
 
 import android.app.Application;
 
+/**
+ * Application for the WearableSensorBase project
+ * @author Balazs Pete
+ *
+ */
 public class WearableSensorBase extends Application {
 
 	public static final int MAX_SERIES_LENGTH = 1000;
@@ -22,7 +27,6 @@ public class WearableSensorBase extends Application {
 		
 		setupSensorData();
 		setupMeasurementEventListener();
-		
 	}
 
 	/**

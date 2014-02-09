@@ -2,6 +2,11 @@ package com.example.wearablesensorbase.data;
 
 import java.util.LinkedList;
 
+/**
+ * A list with a finite number of {@link SensorMeasurement}s
+ * @author Balazs Pete
+ *
+ */
 public class SensorMeasurementSeries extends LinkedList<SensorMeasurement> {
 
 	/**
