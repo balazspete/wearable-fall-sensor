@@ -1,9 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-<item
-        android:id="@+id/simulator_data"
+	<item
+        android:id="@+id/simulator_start"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/simulator_data"/>
+        android:title="@string/simulator_start"/>
+	<item
+        android:id="@+id/simulator_stop"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/simulator_stop"/>
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"

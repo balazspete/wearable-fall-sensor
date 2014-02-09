@@ -1,12 +1,19 @@
 package com.example.wearablesensorbase.data;
 
+import java.io.Serializable;
+
 /**
  * An object to describe a triaxial measurement sample
  * @author Balazs Pete
  *
  */
-public class TriaxialSensorData {
+public class TriaxialSensorData implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4186318170645362274L;
+	
 	public final SensorData x, y, z;
 	
 	/**

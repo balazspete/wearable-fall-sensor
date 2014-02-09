@@ -1,5 +1,7 @@
 package com.example.wearablesensorbase.data;
 
+import java.io.Serializable;
+
 import com.jjoe64.graphview.GraphView.GraphViewData;
 
 /**
@@ -7,8 +9,13 @@ import com.jjoe64.graphview.GraphView.GraphViewData;
  * @author Balazs Pete
  *
  */
-public class SensorData extends GraphViewData {
+public class SensorData extends GraphViewData implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3966525927272578510L;
+	
 	public final long time;
 	public final double value;
 	private double displayValue;

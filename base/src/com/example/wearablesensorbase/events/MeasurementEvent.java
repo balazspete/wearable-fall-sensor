@@ -9,6 +9,11 @@ import com.example.wearablesensorbase.data.SensorMeasurement;
  */
 public class MeasurementEvent extends Event {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7200672165587355503L;
+	
 	private final String sensorID;
 	private final SensorMeasurement measurement;
 	

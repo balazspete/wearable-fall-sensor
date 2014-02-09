@@ -1,9 +1,16 @@
 package com.example.wearablesensorbase.data;
 
+import java.io.Serializable;
+
 import com.jjoe64.graphview.GraphViewSeries;
 
-public class SensorMeasurement {
+public class SensorMeasurement implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5403317119072695604L;
+	
 	public final TriaxialSensorData acceleration, orientation;
 	public final SensorData loudness;
 	public final long time;

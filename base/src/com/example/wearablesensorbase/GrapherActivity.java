@@ -1,5 +1,8 @@
 package com.example.wearablesensorbase;
 
+import java.util.HashMap;
+
+import com.example.wearablesensorbase.data.DataSimulator;
 import com.example.wearablesensorbase.data.SensorData;
 import com.example.wearablesensorbase.data.SensorMeasurement;
 import com.example.wearablesensorbase.data.SensorMeasurementSeries;
@@ -15,19 +18,30 @@ import com.jjoe64.graphview.LineGraphView;
 import android.app.ActionBar;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 public class GrapherActivity extends FragmentActivity implements
 		ActionBar.OnNavigationListener {
 
+	private boolean simulatorOn = false;
+	private HashMap<String, DataSimulator> simulators;
+	
+	private String currentSensor;
+	private long timestamp = 0;
+	
 	public static final int 
 		COLOR_ACCELERATION_X = Color.rgb(52, 152, 219),
 		COLOR_ACCELERATION_Y = Color.rgb(41, 124, 165),
@@ -52,6 +66,8 @@ public class GrapherActivity extends FragmentActivity implements
 		final ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowTitleEnabled(false);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		
+		simulators = new HashMap<String, DataSimulator>();
 
 		// Set up the dropdown list navigation in the action bar.
 		actionBar.setListNavigationCallbacks(
@@ -61,6 +77,7 @@ public class GrapherActivity extends FragmentActivity implements
 						android.R.id.text1, ((WearableSensorBase) getApplication()).getSensorNames()), 
 						this);
 	}
+	
 
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -80,22 +97,64 @@ public class GrapherActivity extends FragmentActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.grapher, menu);
+		
+		if (simulatorOn) {
+			menu.getItem(0).setVisible(false);
+		} else {
+			menu.getItem(1).setVisible(false);
+		}
+
 		return true;
+	}
+	
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()) {
+			case R.id.simulator_start:
+				startSimulator();
+				return true;
+			case R.id.simulator_stop:
+				stopSimulator();
+				return true;
+			default: return super.onOptionsItemSelected(item);
+		}
 	}
 
 	@Override
 	public boolean onNavigationItemSelected(int position, long id) {
 		// When the given dropdown item is selected, show its contents in the
 		// container view.
+		currentSensor = ((WearableSensorBase) getApplication()).getSensorNames()[position];
+		
 		Fragment fragment = new SensorGraphFragment();
 		Bundle args = new Bundle();
-		args.putInt(SensorGraphFragment.SENSOR_NUMBER, position + 1);
+		args.putString(SensorGraphFragment.SENSOR_ID, currentSensor);
 		fragment.setArguments(args);
 		getSupportFragmentManager().beginTransaction()
 				.replace(R.id.container, fragment).commit();
+		
+		DataSimulator simulator = simulators.get(currentSensor);
+		simulatorOn = simulator == null ? false : simulator.isRunning();
+		
+		invalidateOptionsMenu();
+		
 		return true;
+	}
+	
+	private void startSimulator() {
+		simulatorOn = true;
+		DataSimulator simulator = new DataSimulator((WearableSensorBase) getApplication(), currentSensor, timestamp);
+		simulators.put(currentSensor, simulator);
+		simulator.start();
+		invalidateOptionsMenu();
+		Toast.makeText(getApplicationContext(), R.string.simulator_starting, Toast.LENGTH_SHORT).show();
+	}
+	
+	private void stopSimulator() {
+		simulatorOn = false;
+		simulators.get(currentSensor).stopSimulator();
+		invalidateOptionsMenu();
+		Toast.makeText(getApplicationContext(), R.string.simulator_stopping, Toast.LENGTH_SHORT).show();
 	}
 
 	/**
@@ -107,7 +166,9 @@ public class GrapherActivity extends FragmentActivity implements
 		 * The fragment argument representing the section number for this
 		 * fragment.
 		 */
-		public static final String SENSOR_NUMBER = "com.example.wearablesensorbase.sensor_number";
+		public static final int VIEWPORT_SIZE = 30;
+		public static final String SENSOR_ID = "com.example.wearablesensorbase.sensor_id";
+		public static final String SENSOR_DATA = "com.example.wearablesensorbase.sensor_data";
 		public static final int MAX_MEASUREMENTS = 100; 
 
 		private MeasurementEventListener listener;
@@ -135,7 +196,7 @@ public class GrapherActivity extends FragmentActivity implements
 				      container.getContext(), 
 				      getString(R.string.graph_loudness));
 			
-			String sensor = getArguments().getString(SENSOR_NUMBER);
+			final String sensor = getArguments().getString(SENSOR_ID);
 			setupSeries(sensor);
 			
 			summaryGraph.addSeries(accelerationX);
@@ -160,15 +221,28 @@ public class GrapherActivity extends FragmentActivity implements
 			loudnessGraph.addSeries(loudness);
 			addGraph(rootView, loudnessGraph, R.id.graph_loudness);
 			
+			final Handler handler = new Handler() {
+				public void handleMessage(Message message) {
+					MeasurementEvent e = ((MeasurementEvent) message.getData().getSerializable(SENSOR_DATA));
+					SensorMeasurement m = e.getMeasurement();
+					boolean scrollToEnd = true;
+					
+					Log.d("test", e.getSensorId() + " " + sensor);
+					if (e.getSensorId().equals(sensor)) {
+						m.appendAcceleration(accelerationX, accelerationY, accelerationZ, scrollToEnd, MAX_MEASUREMENTS);
+						m.appendOrientation(orientationX, orientationY, orientationZ, scrollToEnd, MAX_MEASUREMENTS);
+						m.appendLoudness(loudness, scrollToEnd, MAX_MEASUREMENTS);
+					}
+				}
+			};
 			listener = new MeasurementEventListener(){
 				@Override
 				public void measurement(MeasurementEvent event) {
-					// TODO Auto-generated method stub
-					SensorMeasurement m = event.getMeasurement();
-					boolean scrollToEnd = true;
-					m.appendAcceleration(accelerationX, accelerationY, accelerationZ, scrollToEnd, MAX_MEASUREMENTS);
-					m.appendOrientation(orientationX, orientationY, orientationZ, scrollToEnd, MAX_MEASUREMENTS);
-					m.appendLoudness(loudness, scrollToEnd, MAX_MEASUREMENTS);
+					Message message = new Message();
+					Bundle bundle = new Bundle();
+					bundle.putSerializable(SENSOR_DATA, event);
+					message.setData(bundle);
+					handler.sendMessage(message);
 				}
 			};
 			addNewMeasurementListener();
@@ -226,7 +300,7 @@ public class GrapherActivity extends FragmentActivity implements
 		}
 		
 		private void setupViewPort(GraphView graph) {
-			graph.setViewPort(0, 20);
+			graph.setViewPort(0, VIEWPORT_SIZE);
 			graph.setScrollable(true);
 			graph.setScalable(true);
 		}

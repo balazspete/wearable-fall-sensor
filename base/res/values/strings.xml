@@ -7,7 +7,10 @@
     
     <string name="title_activity_grapher">Data Grapher</string>
     
-    <string name="simulator_data">Simulate</string>
+    <string name="simulator_start">Start simulator</string>
+    <string name="simulator_starting">Simulator started</string>
+    <string name="simulator_stop">Stop simulator</string>
+    <string name="simulator_stopping">Simulator stopped</string>
     <string name="action_grapher">Sensor Graphs</string>
     
     <string name="graph_summary">Sensor feed</string>
