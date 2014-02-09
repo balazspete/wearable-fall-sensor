@@ -70,6 +70,7 @@ public class WearableSensorBase extends Application {
 
 	protected void setupSensorData() {
 		sensorData = new HashMap<String, SensorMeasurementSeries>();
+		// TODO: make this synamic
 		sensorData.put("SENSOR ONE", new SensorMeasurementSeries(MAX_SERIES_LENGTH));
 		sensorData.put("SENSOR TWO", new SensorMeasurementSeries(MAX_SERIES_LENGTH));
 		sensorData.put("SENSOR THREE", new SensorMeasurementSeries(MAX_SERIES_LENGTH));
