@@ -2,6 +2,8 @@ package com.example.wearablesensorbase;
 
 import java.util.HashMap;
 
+import com.example.wearablesensorbase.ble.BLEService;
+import com.example.wearablesensorbase.ble.XadowBLEHandler;
 import com.example.wearablesensorbase.data.SensorMeasurement;
 import com.example.wearablesensorbase.data.SensorMeasurementSeries;
 import com.example.wearablesensorbase.events.ListenerManager;
@@ -19,12 +21,15 @@ public class WearableSensorBase extends Application {
 
 	public static final int MAX_SERIES_LENGTH = 1000;
 	
+	private BLEService bleService;
 	private ListenerManager<MeasurementEventListener, MeasurementEvent> measurementListenerManager;
 	private HashMap<String, SensorMeasurementSeries> sensorData;
 	
 	public void onCreate() {
 		super.onCreate();
 		
+		bleService = BLEService.createInstance(this, new XadowBLEHandler());
+		bleService.start();
 		setupSensorData();
 		setupMeasurementEventListener();
 	}

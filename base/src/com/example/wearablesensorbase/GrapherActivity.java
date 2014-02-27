@@ -22,6 +22,7 @@ import android.os.Message;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -60,6 +61,7 @@ public class GrapherActivity extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_grapher);
+		setupActionBar();
 
 		// Set up the action bar to show a dropdown list.
 		final ActionBar actionBar = getActionBar();
@@ -106,7 +108,16 @@ public class GrapherActivity extends FragmentActivity implements
 
 		return true;
 	}
-	
+
+	/**
+	 * Set up the {@link android.app.ActionBar}.
+	 */
+	private void setupActionBar() {
+
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+
+	}
+
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
 			case R.id.simulator_start:
@@ -114,6 +125,9 @@ public class GrapherActivity extends FragmentActivity implements
 				return true;
 			case R.id.simulator_stop:
 				stopSimulator();
+				return true;
+			case android.R.id.home:
+				NavUtils.navigateUpFromSameTask(this);
 				return true;
 			default: return super.onOptionsItemSelected(item);
 		}

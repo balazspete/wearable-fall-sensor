@@ -1,5 +1,7 @@
 package com.example.wearablesensorbase;
 
+import com.example.wearablesensorbase.ble.ConnectedDeviceActivity;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -26,12 +28,21 @@ public class MainActivity extends Activity {
 			case R.id.action_grapher:
 				openGrapher();
 				return true;
-			default: return super.onOptionsItemSelected(item);
+			case R.id.action_devices:
+				openDevices();
+				return true;
+			default: 
+				return super.onOptionsItemSelected(item);
 		}
 	}
 
 	private void openGrapher() {
 		Intent intent = new Intent(this, GrapherActivity.class);
+		startActivity(intent);
+	}
+	
+	private void openDevices() {
+		Intent intent = new Intent(this, ConnectedDeviceActivity.class);
 		startActivity(intent);
 	}
 }

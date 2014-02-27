@@ -1,15 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/action_grapher"
+        android:id="@+id/action_scan_devices"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_grapher"/>
-    <item
-        android:id="@+id/action_devices"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_devices"/>
+        android:title="@string/action_scan_devices"/>
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
