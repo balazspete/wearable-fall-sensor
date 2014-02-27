@@ -11,11 +11,20 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+/**
+ * A list adapter to display all BLE devices
+ * @author Balazs Pete
+ *
+ */
 public class DeviceAdapter extends BaseAdapter {
 
 	private Activity activity;
 	private ArrayList<BluetoothDevice> devices;
 	
+	/**
+	 * Create an adapter
+	 * @param activity The creator context
+	 */
 	public DeviceAdapter(Activity activity) {
 		this.activity = activity;
 		devices = new ArrayList<BluetoothDevice>();
@@ -69,10 +78,17 @@ public class DeviceAdapter extends BaseAdapter {
 		return convertView;
 	}
 	
+	/**
+	 * Clear the adapter
+	 */
 	public void clear() {
 		devices.clear();
 	}
 	
+	/**
+	 * Add a device to the adapter
+	 * @param device The device
+	 */
 	public void addDevice(BluetoothDevice device) {
 		devices.add(device);
 	}

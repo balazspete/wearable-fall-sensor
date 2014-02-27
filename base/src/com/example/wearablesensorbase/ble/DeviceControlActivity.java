@@ -22,6 +22,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 
+/**
+ * An activity allowing to see detailed information about a device, and manage the state of the connection
+ * @author Balazs Pete
+ *
+ */
 public class DeviceControlActivity extends Activity {
 
 	public static final String 
@@ -33,7 +38,6 @@ public class DeviceControlActivity extends Activity {
 	private BluetoothDevice device;
 	private BLEConnection connection;
 	private BLEConnectionEventListener bleServiceListener;
-	private byte[] result;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
