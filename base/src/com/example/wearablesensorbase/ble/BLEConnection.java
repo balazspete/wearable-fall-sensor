@@ -28,6 +28,7 @@ public class BLEConnection {
 	private BluetoothGattCallback gattCallback;
 	private State state;
 	private byte[] lastData = new byte[]{};
+	private boolean pending;
 	
 	public BLEConnection(String address, BluetoothGattCallback gattCallback) {
 		if (address == null || gattCallback == null) {
@@ -98,8 +99,24 @@ public class BLEConnection {
 			return;
 		}
 		
+		pending = true;
 		bluetoothGatt.writeCharacteristic(characteristic);
-		bluetoothGatt.executeReliableWrite();
+	}
+	
+	/**
+	 * Send the written data over to the device
+	 */
+	public void flushWrite() {
+		if (bluetoothGatt == null) {
+			Log.w(TAG, "BLE connection was not initialised");
+			return;
+		}
+		
+		if (pending) {
+			bluetoothGatt.executeReliableWrite();
+		}
+		
+		pending = false;
 	}
 	
 	public void setCharacteristicNotification(BluetoothGattCharacteristic characteristic, boolean enabled) {

@@ -20,6 +20,8 @@ import android.widget.Toast;
 
 public class BLEService extends Thread {
 	
+	public static final int DATA_TRANSFER_PERIOD = 1000;
+	
     private final static String TAG = BLEConnection.class.getSimpleName();
 
 	private final BluetoothGattCallback gattCallback = new BluetoothGattCallback() {
@@ -56,7 +58,7 @@ public class BLEService extends Thread {
 				connection.setState(com.example.wearablesensorbase.ble.BLEConnection.State.DISCONNECTED);
 				listenerManager.send(new BLEConnectionEvent(connection, Type.CONNECTION_STATE_CHANGE));
 				
-				connections.remove(gatt.getDevice().getAddress());
+				deleteConnection(gatt.getDevice().getAddress());
 				
 				Log.d(TAG, "Disconnected from BLE device...");
 			} else {
@@ -94,8 +96,6 @@ public class BLEService extends Thread {
 			handler.read(connection, characteristic);
 			listenerManager.send(new BLEConnectionEvent(connection, Type.CHARACTERISTIC_CHANGE));
 
-			
-			
 			Log.d(TAG, "WOOT! Characteristic changed! :O");
 		}
 		
@@ -186,7 +186,11 @@ public class BLEService extends Thread {
 	public void run() {
 		while(true) {
 			try {
-				sleep(10000);
+				for (BLEConnection connection : connections.values()) {
+					connection.flushWrite();
+				}
+				
+				sleep(DATA_TRANSFER_PERIOD);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
