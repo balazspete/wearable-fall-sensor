@@ -3,7 +3,7 @@
 #include <Wire.h>
 #include <Streaming.h>
 #include <string.h>
-
+#include <math.h>
 //====the offset of gyro===========
 #define Gx_offset  -1.50
 #define Gy_offset  0
@@ -76,13 +76,74 @@ void bleTransmitSensorData() {
    char out[100];
    
    // xxxx.xxx|xxxx.xxx|xxxx.xxx|xxxx.xxx|xxxx.xxx|xxxx.xxx|xxxx.xxx"%4.3f|%4.3f|%4.3f|%4.3f|%4.3f|%4.3f|%4.3f"
-   sprintf(out, "%s", Ax);
-   Serial.println(out);
+   //sprintf(out, "%s", Ax);
+   //Serial.println(out);
+   printAccelerationAndGyro();
    
    if (Serial1.available()) {
       Serial1.write(out);
    }
 }
+void printAccelerationAndGyro()
+{
+  Serial.println("Value of Acceleration X Y Z: ");
+  Serial.print(Ax);
+  Serial.print(" , ");
+  Serial.print(Ay);
+  Serial.print(" , ");
+  Serial.println(Az);
+  Serial.println("Value of Gyro X Y Z: ");
+  Serial.print(Gx);
+  Serial.print(" , ");
+  Serial.print(Gy);
+  Serial.print(" , ");
+  Serial.println(Gz);
+}
+
+void calc_xy_angles(){
+   // Using x y and z from accelerometer, calculate x and y angles
+   float x_val, y_val, z_val, result;
+   float x2, y2, z2; //24 bit
+
+  
+  
+   // Lets get the deviations from our baseline
+   //x_val = (float)accel_value_x-(float)accel_center_x;
+   //y_val = (float)accel_value_y-(float)accel_center_y;
+   //z_val = (float)accel_value_z-(float)accel_center_z;
+
+  x_val= Ax;
+  y_val = Ay;
+  z_val = Az;
+
+   // Work out the squares 
+   x2 = (x_val*x_val);
+   y2 = (y_val*y_val);
+   z2 = (z_val*z_val);
+
+   //X Axis
+   result=sqrt(y2+z2);
+   result=x_val/result;
+   float accel_angle_x = atan(result);
+
+   //Y Axis
+   result=sqrt(x2+z2);
+   result=y_val/result;
+   float accel_angle_y = atan(result);
+   
+   float degx = accel_angle_x * RAD_TO_DEG; 
+   float degy = accel_angle_y * RAD_TO_DEG; 
+   Serial.println("Tilt of  X Y: ");
+   Serial.print(degx);
+  Serial.print(" , ");
+  Serial.print(degy);
+  Serial.print(" , ");
+  Serial.print(accel_angle_x);
+  Serial.print(" , ");
+  Serial.print(accel_angle_y);
+  Serial.println();
+}
+
 
 void setup() {
    // Console (remove when not used)
@@ -99,9 +160,10 @@ void setup() {
 
 void loop() {
    updateAccelerationAndGyro();
-   updateLoudness();
+   calc_xy_angles();
+   //updateLoudness();
    bleTransmitSensorData();
-   
+   Serial.println("Test");
    delay(1000);
 }
 
