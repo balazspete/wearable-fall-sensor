@@ -64,10 +64,11 @@ public class XadowBLEHandler implements BLEDeviceHandler {
 	}
 
 	@Override
-	public void read(BLEConnection connection, BluetoothGattCharacteristic characteristic) {
+	public byte[] read(BLEConnection connection, BluetoothGattCharacteristic characteristic) {
 		connection.readCharacteristic(characteristic);
 		byte[] result = characteristic.getValue();
 		connection.setLastData(result);
+		return result;
 	}
 
 }

@@ -177,7 +177,7 @@ public class DeviceControlActivity extends Activity {
 		}
 		
 		if (connection != null && connection.getLastData() != null) {
-			((EditText) findViewById(R.id.last_data)).setText(Arrays.toString(connection.getLastData()));
+			((EditText) findViewById(R.id.last_data)).setText(new String(connection.getLastData()));
 		}
 		
 		invalidateOptionsMenu();

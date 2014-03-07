@@ -20,5 +20,5 @@ public interface BLEDeviceHandler {
 	
 	public void write(BLEConnection connection, byte[] data);
 	
-	public void read(BLEConnection connection, BluetoothGattCharacteristic characteristic);
+	public byte[] read(BLEConnection connection, BluetoothGattCharacteristic characteristic);
 }

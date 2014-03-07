@@ -76,6 +76,10 @@ public class BLEConnection {
 	}
 	
 	public BluetoothDevice getDevice() {
+		if (bluetoothGatt == null) {
+			return null;
+		}
+		
 		return bluetoothGatt.getDevice();
 	}
 	

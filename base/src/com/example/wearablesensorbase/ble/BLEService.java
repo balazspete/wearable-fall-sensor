@@ -16,7 +16,6 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
 import android.util.Log;
-import android.widget.Toast;
 
 public class BLEService extends Thread {
 	
@@ -45,6 +44,8 @@ public class BLEService extends Thread {
 				
 				connections.put(gatt.getDevice().getAddress(), connection);
 				discoverBLEServices(connection);
+
+				application.addSensor(connection.getDevice().getAddress());
 				
 				Log.d(TAG, "Connected to BLE device...");
 			} else if (newState == BluetoothProfile.STATE_DISCONNECTING) {
@@ -91,12 +92,18 @@ public class BLEService extends Thread {
 		public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
 			BLEConnection connection = BLEService.getInstance().getConnection(gatt.getDevice().getAddress());
 			
-			handler.read(connection, characteristic);
-			listenerManager.send(new BLEConnectionEvent(connection, Type.CHARACTERISTIC_CHANGE));
+			byte[] data = handler.read(connection, characteristic);
+			BLEConnectionEvent event = null;
+			if (data == null || data.length == 0) {
+				listenerManager.send(new BLEConnectionEvent(connection, Type.CHARACTERISTIC_CHANGE));
+				Log.d(TAG, "WOOT! Characteristic changed! :O");
+			} else {
+				event = new BLEConnectionEvent(connection, Type.INCOMING_DATA);
+				event.putData(data);
+				Log.d(TAG, "WOOT! DATA! :O");
+			}
 
-			
-			
-			Log.d(TAG, "WOOT! Characteristic changed! :O");
+			listenerManager.send(event);
 		}
 		
 		public void onServicesDiscovered(BluetoothGatt gatt, int status) {
@@ -147,6 +154,10 @@ public class BLEService extends Thread {
 						break;
 					case SERVICE_DISCOVERY:
 						listener.onConnectionServiceDiscovery(event);
+						break;
+					case INCOMING_DATA:
+						listener.onIncomingData(event);
+						break;
 					default:
 						break;
 				}
