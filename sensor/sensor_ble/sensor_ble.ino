@@ -73,14 +73,23 @@ void updateLoudness()
 }
 
 void bleTransmitSensorData() {
-   char out[100];
-   
-   // xxxx.xxx|xxxx.xxx|xxxx.xxx|xxxx.xxx|xxxx.xxx|xxxx.xxx|xxxx.xxx"%4.3f|%4.3f|%4.3f|%4.3f|%4.3f|%4.3f|%4.3f"
-   sprintf(out, "%s", Ax);
-   Serial.println(out);
-   
    if (Serial1.available()) {
-      Serial1.write(out);
+      Serial1.print("#MEASUREMENT|");
+      Serial1.print(Ax);
+      Serial1.print("|");
+      Serial1.print(Ay);
+      Serial1.print("|");
+      Serial1.print(Az);
+      Serial1.print("|");
+      Serial1.print(Gx);
+      Serial1.print("|");
+      Serial1.print(Gy);
+      Serial1.print("|");
+      Serial1.print(Gz);
+      Serial1.print("|");
+      Serial1.print(loudness);
+      Serial1.print("#");
+      Serial1.flush();
    }
 }
 
@@ -98,11 +107,13 @@ void setup() {
 }
 
 void loop() {
+  while(true) {
    updateAccelerationAndGyro();
    updateLoudness();
    bleTransmitSensorData();
    
    delay(1000);
+  }
 }
 
 
