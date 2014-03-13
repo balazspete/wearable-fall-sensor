@@ -31,12 +31,9 @@
     <string name="menu_stop">Stop</string>
     <string name="ble_not_supported">BLE not supported</string>
     <string name="title_activity_device_control">BLE Device Control</string>
-    
-    
     <string name="ble_device_name">Device name:</string>
     <string name="ble_device_addr">Address:</string>
     <string name="ble_bond_status">Bond status:</string>
-    
     <string name="ble_connect">Connect</string>
     <string name="ble_disconnect">Disconnect</string>
     <string name="ble_connected">Connected</string>
@@ -44,9 +41,9 @@
     <string name="ble_connecting">Connecting</string>
     <string name="ble_disconnecting">Disconnecting</string>
     <string name="ble_not_connected">Not Connected</string>
-    
     <string name="send">Send</string>
     <string name="message_hint">Enter message</string>
     <string name="last_data">Last received BYTE array from device</string>
+    <string name="title_activity_device_callibration">Device Callibration</string>
 
 </resources>
