@@ -9,10 +9,10 @@ import com.example.wearablesensorbase.data.SensorMeasurementSeries;
 public class Detector {
 
 	private HashMap<String, SensorMeasurementSeries> data;
-	private Callibration callibration;
+	private HashMap<String, Callibration> callibrations;
 	
-	public Detector(Callibration callibration, HashMap<String, SensorMeasurementSeries> data) {
-		this.callibration = callibration;
+	public Detector(HashMap<String, Callibration> callibrations, HashMap<String, SensorMeasurementSeries> data) {
+		this.callibrations = callibrations;
 		this.data = data;
 	}
 	
