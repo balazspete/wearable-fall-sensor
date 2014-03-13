@@ -2,14 +2,17 @@ package com.example.wearablesensorbase.detector;
 
 import java.util.HashMap;
 
+import com.example.wearablesensorbase.callibration.Callibration;
 import com.example.wearablesensorbase.data.SensorMeasurement;
 import com.example.wearablesensorbase.data.SensorMeasurementSeries;
 
 public class Detector {
 
 	private HashMap<String, SensorMeasurementSeries> data;
+	private Callibration callibration;
 	
-	public Detector(HashMap<String, SensorMeasurementSeries> data) {
+	public Detector(Callibration callibration, HashMap<String, SensorMeasurementSeries> data) {
+		this.callibration = callibration;
 		this.data = data;
 	}
 	
