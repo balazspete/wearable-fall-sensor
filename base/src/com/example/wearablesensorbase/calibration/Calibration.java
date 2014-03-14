@@ -1,8 +1,8 @@
-package com.example.wearablesensorbase.callibration;
+package com.example.wearablesensorbase.calibration;
 
 import com.example.wearablesensorbase.data.SensorMeasurement;
 
-public class Callibration {
+public class Calibration {
 
 	public void callibrateLeftwards(SensorMeasurement first, SensorMeasurement second) {
 		
