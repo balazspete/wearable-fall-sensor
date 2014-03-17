@@ -6,22 +6,20 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".ConnectedDeviceActivity" >
+    tools:context=".LogViewActivity" >
 
-    <TextView
-        android:id="@+id/no_sensors_text"
+    <EditText
+        android:id="@+id/log_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:text="@string/no_sensors_text" />
-
-    <ListView
-        android:id="@+id/sensor_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/no_sensors_text" >
-    </ListView>
+        android:layout_alignParentTop="true"
+        android:ems="10"
+        android:inputType="textMultiLine" >
+
+        <requestFocus />
+    </EditText>
 
 </RelativeLayout>

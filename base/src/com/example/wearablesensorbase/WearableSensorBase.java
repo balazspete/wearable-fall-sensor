@@ -5,6 +5,7 @@ import java.util.HashMap;
 import com.example.wearablesensorbase.ble.BLEService;
 import com.example.wearablesensorbase.ble.IncomingDataParser;
 import com.example.wearablesensorbase.ble.XadowBLEHandler;
+import com.example.wearablesensorbase.data.BufferedMeasurementSaver;
 import com.example.wearablesensorbase.data.SensorMeasurement;
 import com.example.wearablesensorbase.data.SensorMeasurementSeries;
 import com.example.wearablesensorbase.events.BLEConnectionEvent;
@@ -28,12 +29,15 @@ public class WearableSensorBase extends Application {
 	private ListenerManager<MeasurementEventListener, MeasurementEvent> measurementListenerManager;
 	private HashMap<String, SensorMeasurementSeries> sensorData;
 	private IncomingDataParser parser;
+	private BufferedMeasurementSaver measurementSaver;
 	
 	public void onCreate() {
 		super.onCreate();
 		
 		bleService = BLEService.createInstance(this, new XadowBLEHandler());
 		bleService.start();
+		
+		measurementSaver = new BufferedMeasurementSaver(this);
 		
 		setupSensorData();
 		setupMeasurementEventListener();
@@ -105,6 +109,7 @@ public class WearableSensorBase extends Application {
 				listener.measurement(event);
 			}
 		};
+		measurementListenerManager.addEventListener(measurementSaver.getMeasurementEventListener());
 	}
 	
 	protected void setupIncomingDataParser() {
@@ -136,4 +141,5 @@ public class WearableSensorBase extends Application {
 			public void onConnectionCharacteristicChange(BLEConnectionEvent event) { }
 		});
 	}
+	
 }

@@ -85,21 +85,12 @@
         android:layout_alignLeft="@+id/device_connected"
         android:layout_below="@+id/device_connected"
         android:layout_marginTop="22dp"
+        android:layout_toLeftOf="@+id/send_message"
         android:ems="10"
         android:hint="@string/message_hint" >
 
         <requestFocus />
     </EditText>
-
-    <Button
-        android:id="@+id/send_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/message_box"
-        android:layout_alignBottom="@+id/message_box"
-        android:layout_toRightOf="@+id/message_box"
-        android:onClick="sendMessage"
-        android:text="@string/send" />
 
     <TextView
         android:id="@+id/last_data_label"
@@ -135,5 +126,15 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <Button
+        android:id="@+id/send_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/message_box"
+        android:layout_alignBottom="@+id/message_box"
+        android:layout_alignParentRight="true"
+        android:onClick="sendMessage"
+        android:text="@string/send" />
 
 </RelativeLayout>

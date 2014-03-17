@@ -78,4 +78,28 @@ public class SensorMeasurement implements Serializable {
 	public void appendLoudness(GraphViewSeries loudness, boolean scrollToEnd, int maxDataCount) {
 		loudness.appendData(this.loudness, scrollToEnd, maxDataCount);
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder out = new StringBuilder("#MEASUREMENT(");
+		out.append(time);
+		out.append(")|");
+		out.append(acceleration.x);
+		out.append("|");
+		out.append(acceleration.y);
+		out.append("|");
+		out.append(acceleration.z);
+		out.append("|");
+		out.append(orientation.x);
+		out.append("|");
+		out.append(orientation.y);
+		out.append("|");
+		out.append(orientation.z);
+		out.append("|");
+		out.append(loudness);
+		out.append("#");
+		
+		return out.toString();
+	}
+	
 }

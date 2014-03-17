@@ -49,4 +49,15 @@ public class SensorData extends GraphViewData implements Serializable {
 	public void setDisplayValue(double value) {
 		this.displayValue = value;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder out = new StringBuilder();
+		out.append(value);
+		out.append("(");
+		out.append(displayValue);
+		out.append(")");
+		
+		return out.toString();
+	}
 }

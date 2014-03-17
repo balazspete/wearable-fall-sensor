@@ -2,7 +2,6 @@ package com.example.wearablesensorbase.ble;
 
 import java.util.List;
 
-import com.example.wearablesensorbase.GrapherActivity;
 import com.example.wearablesensorbase.R;
 
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 import android.support.v4.app.NavUtils;
 
 public class ConnectedDeviceActivity extends Activity {
