@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name="com.example.wearablesensorbase.WearableSensorBase"
@@ -58,6 +59,10 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.wearablesensorbase.ble.ConnectedDeviceActivity" />
+        </activity>
+        <activity
+            android:name="com.example.wearablesensorbase.data.LogViewActivity"
+            android:label="@string/title_activity_log_view" >
         </activity>
     </application>
 
