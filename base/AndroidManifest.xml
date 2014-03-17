@@ -61,6 +61,14 @@
                 android:value="com.example.wearablesensorbase.ble.ConnectedDeviceActivity" />
         </activity>
         <activity
+            android:name="com.example.wearablesensorbase.calibration.DeviceCalibrationActivity"
+            android:label="@string/title_activity_device_callibration"
+            android:parentActivityName="com.example.wearablesensorbase.ble.DeviceControlActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.wearablesensorbase.ble.DeviceControlActivity" />
+        </activity>
+        <activity
             android:name="com.example.wearablesensorbase.data.LogViewActivity"
             android:label="@string/title_activity_log_view" >
         </activity>

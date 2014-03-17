@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DeviceCallibrationActivity" >
+    tools:context=".DeviceCalibrationActivity" >
 
     
     <LinearLayout
@@ -18,35 +18,44 @@
             android:id="@+id/mini_instruction_above"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@android:style/TextAppearance.DeviceDefault.Small"
+            android:textSize="16sp"
             android:text="Dummy"
             />
-        <TextView 
+
+        <TextView
             android:id="@+id/main_instruction"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@android:style/TextAppearance.DeviceDefault.Large"
             android:text="Dummy"
-            />
+            android:textSize="20sp" />
+
         <TextView 
             android:id="@+id/mini_instruction_below"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@android:style/TextAppearance.DeviceDefault.Small"
+            android:textSize="16sp"
             android:text="Dummy"
             />
         
     </LinearLayout>
-    
+
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true" />
+
     <ListView
         android:id="@+id/sensor_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/progressBar1"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/instructions_panel" >
-    </ListView>
+        android:layout_below="@+id/instructions_panel" >
 
+    </ListView>
 
 </RelativeLayout>

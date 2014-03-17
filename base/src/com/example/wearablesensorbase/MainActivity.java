@@ -1,6 +1,7 @@
 package com.example.wearablesensorbase;
 
 import com.example.wearablesensorbase.ble.ConnectedDeviceActivity;
+import com.example.wearablesensorbase.calibration.DeviceCalibrationActivity;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -31,6 +32,9 @@ public class MainActivity extends Activity {
 			case R.id.action_devices:
 				openDevices();
 				return true;
+			case R.id.action_calibrate:	
+				calibrateDevice();
+				return true;
 			default: 
 				return super.onOptionsItemSelected(item);
 		}
@@ -43,6 +47,11 @@ public class MainActivity extends Activity {
 	
 	private void openDevices() {
 		Intent intent = new Intent(this, ConnectedDeviceActivity.class);
+		startActivity(intent);
+	}
+	
+	private void calibrateDevice() {
+		Intent intent = new Intent(this, DeviceCalibrationActivity.class);
 		startActivity(intent);
 	}
 }
