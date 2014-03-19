@@ -28,9 +28,7 @@ public class Detector {
 		};
 	}
 	
-	
-	
-	public void newMeasurement(String sensor, int index) {
+	public void newMeasurement(String sensor, int index, SensorMeasurement measurement) {
 		
 //		SensorMeasurement m = data.get(sensor).get(index);
 //		SensorMeasurement m2 = data.get(sensor).getLast();

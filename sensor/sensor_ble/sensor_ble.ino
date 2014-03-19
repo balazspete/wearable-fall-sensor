@@ -175,7 +175,7 @@ void loop() {
     //normalise()
     bleTransmitSensorData();
    
-    delay(500);
+    delay(5000);
   }
 }
 

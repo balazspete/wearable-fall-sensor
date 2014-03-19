@@ -5,9 +5,12 @@ import java.util.HashMap;
 import com.example.wearablesensorbase.ble.BLEService;
 import com.example.wearablesensorbase.ble.IncomingDataParser;
 import com.example.wearablesensorbase.ble.XadowBLEHandler;
+import com.example.wearablesensorbase.calibration.Calibration;
+import com.example.wearablesensorbase.calibration.Step;
 import com.example.wearablesensorbase.data.BufferedMeasurementSaver;
 import com.example.wearablesensorbase.data.SensorMeasurement;
 import com.example.wearablesensorbase.data.SensorMeasurementSeries;
+import com.example.wearablesensorbase.detector.Detector;
 import com.example.wearablesensorbase.events.BLEConnectionEvent;
 import com.example.wearablesensorbase.events.BLEConnectionEventListener;
 import com.example.wearablesensorbase.events.ListenerManager;
@@ -28,8 +31,10 @@ public class WearableSensorBase extends Application {
 	private BLEService bleService;
 	private ListenerManager<MeasurementEventListener, MeasurementEvent> measurementListenerManager;
 	private HashMap<String, SensorMeasurementSeries> sensorData;
+	private HashMap<String, Calibration> calibrations;
 	private IncomingDataParser parser;
 	private BufferedMeasurementSaver measurementSaver;
+	private Detector detector;
 	
 	public void onCreate() {
 		super.onCreate();
@@ -83,11 +88,19 @@ public class WearableSensorBase extends Application {
 			series.add(measurement);
 			MeasurementEvent event = new MeasurementEvent(sensor, measurement);
 			measurementListenerManager.send(event);
+			if (detector != null) {
+				detector.newMeasurement(sensor, series.size()-1, measurement);
+			}
 		}
+	}
+	
+	public void initializeDetector() {
+		detector = new Detector(calibrations, sensorData);
 	}
 
 	protected void setupSensorData() {
 		sensorData = new HashMap<String, SensorMeasurementSeries>();
+		calibrations = new HashMap<String, Calibration>();
 	}
 	
 	public void addSensor(String connectionID) {
@@ -96,10 +109,36 @@ public class WearableSensorBase extends Application {
 		}
 		
 		sensorData.put(connectionID, new SensorMeasurementSeries(MAX_SERIES_LENGTH));
+		calibrations.put(connectionID, new Calibration());
 	}
 	
 	public void removeSensor(String connectionID) {
 		sensorData.remove(connectionID);
+		calibrations.remove(connectionID);
+	}
+	
+	public void calibrateDeviceInDirection(String connectionID, Step step, SensorMeasurement one, SensorMeasurement two) {
+		Calibration c = calibrations.get(connectionID);
+		switch (step) {
+			case FORWARD:
+				c.callibrateForwards(one, two);
+				break;
+			case BACKWARD:
+				c.callibrateBackwards(one, two);
+				break;
+			case DOWNWARD:
+				c.callibrateDownwards(one, two);
+				break;
+			case LEFTWARD:
+				c.callibrateLeftwards(one, two);
+				break;
+			case RIGHTWARD:
+				c.callibrateRightwards(one, two);
+				break;
+			case UPWARD:
+				c.callibrateUpwards(one, two);
+				break;
+		}
 	}
 	
 	protected void setupMeasurementEventListener() {

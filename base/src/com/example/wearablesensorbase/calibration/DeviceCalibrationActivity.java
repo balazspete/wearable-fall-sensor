@@ -1,11 +1,16 @@
 package com.example.wearablesensorbase.calibration;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.example.wearablesensorbase.R;
+import com.example.wearablesensorbase.WearableSensorBase;
 import com.example.wearablesensorbase.ble.BLEConnection;
 import com.example.wearablesensorbase.ble.BLEService;
 import com.example.wearablesensorbase.ble.ConnectedDeviceAdapter;
+import com.example.wearablesensorbase.data.SensorMeasurement;
+import com.example.wearablesensorbase.events.MeasurementEvent;
+import com.example.wearablesensorbase.events.MeasurementEventListener;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -14,13 +19,30 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v4.app.NavUtils;
 
 public class DeviceCalibrationActivity extends Activity {
-
+	
+	private WearableSensorBase app;
+	private HashMap<String, SensorMeasurement> firstMeasurements;
+	
+	private int currentState = -1;
+	private Step[] steps = { 
+		Step.FORWARD, 
+		Step.BACKWARD, 
+		Step.LEFTWARD, 
+		Step.RIGHTWARD, 
+		Step.DOWNWARD, 
+		Step.UPWARD 
+	};
+	
 	private DeviceCalibrationAdapter adapter;
 	private boolean calibrating = false;
+	private boolean nextVisible = false;
+	
+	private MeasurementEventListener listener;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +50,32 @@ public class DeviceCalibrationActivity extends Activity {
 		setContentView(R.layout.activity_device_callibration);
 		// Show the Up button in the action bar.
 		setupActionBar();
+
+		app = (WearableSensorBase) getApplication();
+		
 		setupLayout();
+		invalidateOptionsMenu();
+		
+		listener = new MeasurementEventListener() {
+			@Override
+			public void measurement(MeasurementEvent event) {
+				handleNewMeasurement(event);
+			}
+		};
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		app.addMeasurementEventListener(listener);
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		app.removeMeasurementEventListener(listener);
+	}
+	
 	/**
 	 * Set up the {@link android.app.ActionBar}.
 	 */
@@ -54,6 +99,7 @@ public class DeviceCalibrationActivity extends Activity {
             menu.findItem(R.id.menu_refresh).setActionView(null);
 		}
 		
+		System.out.println("Invalidating options menu");
 		return true;
 	}
 
@@ -74,6 +120,15 @@ public class DeviceCalibrationActivity extends Activity {
 	}
 	
 	private void setupLayout() {
+		TextView text = (TextView) findViewById(R.id.main_instruction);
+		text.setText("Calibration");
+		
+		text = (TextView) findViewById(R.id.mini_instruction_above);
+		text.setText("");
+		
+		text = (TextView) findViewById(R.id.mini_instruction_below);
+		text.setText("Press START to begin");
+		
 		ListView view = (ListView) findViewById(R.id.sensor_list);
 		adapter = new DeviceCalibrationAdapter(this);
 		view.setAdapter(adapter);
@@ -102,11 +157,127 @@ public class DeviceCalibrationActivity extends Activity {
 	private void startCalibration() {
 		calibrating = true;
 		invalidateOptionsMenu();
+		
+		currentState = 0;
+		beginCalibrationStep();
 	}
 	
 	private void stopCalibration() {
 		calibrating = false;
 		invalidateOptionsMenu();
+	}
+	
+	private void beginCalibrationStep() {
+		firstMeasurements = new HashMap<String, SensorMeasurement>();
+
+		adapter.clearStatuses();
+		adapter.notifyDataSetChanged();
+		findViewById(R.id.sensor_list).invalidate();
+		
+		setCalibrationProgress(((double) currentState)/steps.length);
+		showInstructionsOnScreen();
+		
+		nextVisible = false;
+		calibrating = true;
+	}
+	
+	private void handleNewMeasurement(MeasurementEvent event) {
+		if (!calibrating) {
+			return;
+		}
+		
+		SensorMeasurement first = firstMeasurements.get(event.getSensorId());
+		if (first == null) {
+			firstMeasurements.put(event.getSensorId(), event.getMeasurement());
+			return;
+		}
+		
+		app.calibrateDeviceInDirection(event.getSensorId(), steps[currentState], first, event.getMeasurement());
+		
+		int pos = adapter.getPosition(event.getSensorId());
+		System.out.println("position "+pos);
+		adapter.setStatus(pos, true);
+		adapter.notifyDataSetChanged();
+		
+		if (!isAllCalibratedInStep()) {
+			return;
+		}
+		
+		new Thread(new Runnable(){
+			@Override
+			public void run() {
+				doneWithStep();
+			}
+		}).start();
+	}
+	
+	public void doneWithStep() {
+		if (currentState +1 >= steps.length) {
+			doneWithCalibration();
+			return;
+		}
+		
+		final Activity a = this;
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				Toast.makeText(a, "DONE WITH STEP " + steps[currentState], Toast.LENGTH_LONG).show();
+			}
+		});
+		
+		calibrating = false;
+		nextVisible = true;
+		adapter.notifyDataSetChanged();
+		invalidateOptionsMenu();
+	}
+	
+	public void nextClick(View item) {
+		System.out.println("NEXT");
+		if (calibrating) {
+			Toast.makeText(this, "Cannot go to next yet!", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		goToNext();
+	}
+	
+	private void goToNext() {
+		currentState++;
+		beginCalibrationStep();
+	}
+	
+	private boolean isAllCalibratedInStep() {
+		boolean calibrated = true;
+		for (int i = 0; i < adapter.getCount(); i++) {
+			calibrated = calibrated && adapter.getStatus(i);
+			System.out.println(calibrated);
+		}
+		
+		return calibrated;
+	}
+	
+	private void doneWithCalibration() {
+		stopCalibration();
+		setCalibrationProgress(1);
+		adapter.notifyDataSetChanged();
+		final Activity a = this;
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				((WearableSensorBase) getApplication()).initializeDetector();
+				Toast.makeText(a, "Calibration complete", Toast.LENGTH_LONG).show();
+			}
+		});
+	}
+	
+	private void showInstructionsOnScreen() {
+		TextView text = (TextView) findViewById(R.id.main_instruction);
+		text.setText("Move " + steps[currentState].toString());
+		
+		text = (TextView) findViewById(R.id.mini_instruction_above);
+		text.setText("Calibration step " + currentState + " out of " + steps.length);
+		
+		text = (TextView) findViewById(R.id.mini_instruction_below);
+		text.setText("Get all sensors to green");
 	}
 	
 }

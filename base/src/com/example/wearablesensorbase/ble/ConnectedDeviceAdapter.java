@@ -41,6 +41,17 @@ public class ConnectedDeviceAdapter extends DeviceAdapter {
 		return connections.get(arg0);
 	}
 	
+	public int getPosition(String connectionID) {
+		int index = -1;
+		for (BLEConnection c : connections) {
+			index++;
+			if (c.getDevice().getAddress().equals(connectionID)) {
+				return index;
+			}
+		}
+		return -1;
+	}
+	
 	public void addConnection(BLEConnection connection) {
 		this.connections.add(connection);
 		super.addDevice(connection.getDevice());

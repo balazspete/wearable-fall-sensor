@@ -4,13 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothDevice;
 import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.example.wearablesensorbase.R;
 import com.example.wearablesensorbase.ble.BLEConnection;
 import com.example.wearablesensorbase.ble.ConnectedDeviceAdapter;
 
@@ -46,5 +43,19 @@ public class DeviceCalibrationAdapter extends ConnectedDeviceAdapter {
 		
 		return view;
 	}
-
+	
+	public void setStatus(int position, boolean status) {
+		statuses.set(position, status);
+	}
+	
+	public boolean getStatus(int position) {
+		return statuses.get(position);
+	}
+	
+	public void clearStatuses() {
+		for (int i = 0; i < statuses.size(); i++) {
+			statuses.set(i, false);
+		}
+	}
+	
 }
