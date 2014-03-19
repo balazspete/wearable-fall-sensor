@@ -1,62 +1,47 @@
 package com.example.wearablesensorbase.ble;
 
-import java.util.Arrays;
 import java.util.HashMap;
 
 import com.example.wearablesensorbase.data.SensorMeasurement;
 
 public abstract class IncomingDataParser {
 	
-	private HashMap<String, StringBuffer> buffers;
+	private HashMap<String, ParserHelper> helpers;
+	private String leftover;
 	
 	public IncomingDataParser() {
-		buffers = new HashMap<String, StringBuffer>();
+		helpers = new HashMap<String, ParserHelper>();
+		leftover = "";
 	}
 
-	public synchronized void parse(String connection, byte[] data) {
-		String message = new String(data);
-		
-		if (message.startsWith("#")) {
-			System.out.println("BEGIN MESSAGE");
-			beginMessage(connection, message);
-		} else if (message.endsWith("#")) {
-			System.out.println("END MESSAGE");
-			endMessage(connection, message);
-		} else {
-			appendToMessage(connection, message);
+	public void parse(String connection, byte[] data) {
+		ParserHelper helper = helpers.get(connection);
+		if (helper == null) {
+			helper = new ParserHelper(connection);
+			helpers.put(connection, helper);
 		}
+		
+		String[] chunks = (leftover + new String(data)).split("#");
+		
+		for (int i = 0; i < chunks.length-1; i++) {
+			String chunk = chunks[i];
+			if (chunk.isEmpty()) {
+				continue;
+			}
+			
+			helper.storeChunk(chunk);
+			
+			String[] values = helper.getValues();
+			if (values != null) {
+				createMeasurement(connection, values);
+				helper.reset();
+			}
+		}
+		
+		leftover = chunks[chunks.length-1];
 	}
 	
 	public abstract void handleSensorMeasurement(String connection, SensorMeasurement measurement);
-	
-	
-	private void beginMessage(String connection, String message) {
-		buffers.put(connection, new StringBuffer(message));
-		
-		if (message.toString().endsWith("#")) {
-			endMessage(connection, "");
-		}
-	}
-	
-	private void endMessage(String connection, String message) {
-		StringBuffer str = buffers.remove(connection);
-		str.append(message);
-		
-		handleMessage(connection, str.toString());
-	}
-	
-	private void appendToMessage(String connection, String message) {
-		buffers.get(connection).append(message);
-	}
-	
-	private void handleMessage(String connection, String message) {
-		String[] splitMessage = message.replace("#", "").split("\\|");
-		if (splitMessage[0].equalsIgnoreCase("MEASUREMENT")) {
-			createMeasurement(connection, splitMessage);
-		}// other statements here...
-		
-		
-	}
 	
 	private void createMeasurement(String connection, String[] message) {
 		double[] values = new double[7];
@@ -75,6 +60,75 @@ public abstract class IncomingDataParser {
 				values[6]);
 		
 		handleSensorMeasurement(connection, measurement);
+	}
+	
+	private class ParserHelper {
+		
+		public final String connection;
+		private String
+			ax, ay, az,
+			gx, gy, gz, 
+			lo;
+		
+		public ParserHelper(String connection) {
+			this.connection = connection;
+		}
+		
+		public synchronized void storeChunk(String chunk) {
+			String value = chunk.substring(3);
+			if (chunk.startsWith("A")) {
+				if (chunk.startsWith("X", 1)) {
+					ax = value;
+				} else if (chunk.startsWith("Y", 1)) {
+					ay = value;
+				} else if (chunk.startsWith("Z", 1)) {
+					az = value;
+				}
+			} else if (chunk.startsWith("G")) {
+				if (chunk.startsWith("X", 1)) {
+					gx = value;
+				} else if (chunk.startsWith("Y", 1)) {
+					gy = value;
+				} else if (chunk.startsWith("Z", 1)) {
+					gz = value;
+				}
+			} else if (chunk.startsWith("LO")) {
+				lo = value;
+			}
+		}
+		
+		public boolean isReady() {
+			return ax != null && ay != null && az != null &&
+					gx != null && gy != null && gz != null &&
+					lo != null;
+		}
+		
+		public String[] getValues() {
+			if (!isReady()) {
+				return null;
+			}
+			
+			String[] values = new String[]{
+				ax, ay, az,
+				gx, gy, gz, 
+				lo
+			};
+			
+			return values;
+		}
+		
+		public void reset() {
+			ax = null;
+			ay = null;
+			az = null;
+			
+			gx = null;
+			gy = null;
+			gz = null;
+			
+			lo = null;
+		}
+		
 	}
 	
 }

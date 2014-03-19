@@ -74,6 +74,7 @@ void updateLoudness()
 
 int dToBuffer(float value, char* buffer, int start)
 {
+  int origin = start;
   if (value >= 1000)
   {
     return -1;
@@ -101,6 +102,14 @@ int dToBuffer(float value, char* buffer, int start)
     v = v - _v*b;
     if (i == 2)
     {
+      if (buffer[start-1] == '-')
+      {
+        buffer[start++] = '0';
+      }
+      else if (origin - start == 0)
+      {
+        buffer[start++] = '0';
+      } 
       buffer[start++] = '.';
     }
   }
@@ -121,37 +130,60 @@ int copyOver(char origin[], char target[], unsigned int size, unsigned int start
     return start+index;
 }
 
+void writeToSerial(char text[], int length, float value)
+{
+    char buffer [length + 10];
+    buffer[0] = *"#";
+    copyOver(text, buffer, length, 1);
+    int index = dToBuffer(value, buffer, length+1);
+    buffer[index] = *"#";
+    buffer[index+1] = '\0';
+    
+//    if (Serial.available())
+//    {
+//        Serial.write(buffer);
+//        Serial.flush();  
+//        Serial.println();
+//    }
+    
+//    if (Serial1.available())
+//    {
+        Serial1.write(buffer);
+        Serial1.flush();  
+//    }
+}
+
 void bleTransmitSensorData() 
 {
-
-  if (Serial1.available())
-  {
-    //if (Serial) {
-      char buffer [100];
-      int start = 0;
-      
-      char text[] = { '#', 'M', 'E', 'A', 'S', 'U', 'R', 'E', 'M', 'E', 'N', 'T', '|' };
-      
-      start = copyOver(text, buffer, 13, start);
-      start = dToBuffer(Ax, buffer, start);
-      buffer[start++] = '|';
-      start = dToBuffer(Ay, buffer, start);
-      buffer[start++] = '|';
-      start = dToBuffer(Az, buffer, start);
-      buffer[start++] = '|';
-      start = dToBuffer(Gx, buffer, start);
-      buffer[start++] = '|';
-      start = dToBuffer(Gy, buffer, start);
-      buffer[start++] = '|';
-      start = dToBuffer(Gz, buffer, start);
-      buffer[start++] = '|';
-      start = dToBuffer(loudness, buffer, start);
-      buffer[start++] = '#';
-      buffer[start] = '\0';
-      
-      Serial1.write(buffer);
-      Serial1.flush();
-  }
+    char text[] = { 'A', 'X', ':' };
+    writeToSerial(text, 3, Ax);
+    delay(5);
+    
+    text[1] = 'Y';
+    writeToSerial(text, 3, Ay);
+    delay(5);
+    
+    text[1] = 'Z';
+    writeToSerial(text, 3, Az);
+    delay(5);
+    
+    text[0] = 'G';
+    text[1] = 'X';
+    writeToSerial(text, 3, Gx);
+    delay(5);
+    
+    text[1] = 'Y';
+    writeToSerial(text, 3, Gy);
+    delay(5);
+    
+    text[1] = 'Z';
+    writeToSerial(text, 3, Gz);
+    delay(5);
+    
+    text[0] = 'L';
+    text[1] = 'O';
+    writeToSerial(text, 3, loudness);
+    delay(5);
 }
 
 void setup() {
@@ -175,7 +207,7 @@ void loop() {
     //normalise()
     bleTransmitSensorData();
    
-    delay(5000);
+    delay(100);
   }
 }
 
