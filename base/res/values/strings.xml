@@ -3,6 +3,50 @@
 
     <string name="app_name">Wearable Sensor Base</string>
     <string name="action_settings">Settings</string>
+    <string name="action_devices">BLE Devices</string>
     <string name="hello_world">Hello world!</string>
+    <string name="action_scan_devices">BLE Scan</string>
+    <string name="title_activity_grapher">Data Grapher</string>
+    <string name="simulator_start">Start simulator</string>
+    <string name="simulator_starting">Simulator started</string>
+    <string name="simulator_stop">Stop simulator</string>
+    <string name="simulator_stopping">Simulator stopped</string>
+    <string name="action_grapher">Sensor Graphs</string>
+    <string name="graph_summary">Sensor feed</string>
+    <string name="graph_acceleration">Acceleration (X, Y, Z)</string>
+    <string name="graph_orientation">Orientation (X, Y, Z)</string>
+    <string name="graph_loudness">Loudness</string>
+    <string name="acceleration_x">Acceleration - X axis</string>
+    <string name="acceleration_y">Acceleration - Y axis</string>
+    <string name="acceleration_z">Acceleration - Z axis</string>
+    <string name="orientation_x">Orientation - X axis</string>
+    <string name="orientation_y">Orientation - Y axis</string>
+    <string name="orientation_z">Orientation - Z axis</string>
+    <string name="loudness">Loudness</string>
+    <string name="title_activity_connected_devices">Connected Devices</string>
+    <string name="no_sensors_text">No Connected Devices</string>
+    <string name="disconnect_sensor">Disconnect</string>
+    <string name="title_activity_blescan">BLE Scan</string>
+    <string name="menu_scan">Scan</string>
+    <string name="menu_stop">Stop</string>
+    <string name="ble_not_supported">BLE not supported</string>
+    <string name="title_activity_device_control">BLE Device Control</string>
+    
+    
+    <string name="ble_device_name">Device name:</string>
+    <string name="ble_device_addr">Address:</string>
+    <string name="ble_bond_status">Bond status:</string>
+    
+    <string name="ble_connect">Connect</string>
+    <string name="ble_disconnect">Disconnect</string>
+    <string name="ble_connected">Connected</string>
+    <string name="ble_disconnected">Disconnected</string>
+    <string name="ble_connecting">Connecting</string>
+    <string name="ble_disconnecting">Disconnecting</string>
+    <string name="ble_not_connected">Not Connected</string>
+    
+    <string name="send">Send</string>
+    <string name="message_hint">Enter message</string>
+    <string name="last_data">Last received BYTE array from device</string>
 
 </resources>

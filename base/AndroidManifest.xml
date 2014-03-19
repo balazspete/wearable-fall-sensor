@@ -8,7 +8,12 @@
         android:minSdkVersion="18"
         android:targetSdkVersion="18" />
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
+        android:name="com.example.wearablesensorbase.WearableSensorBase"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -21,6 +26,38 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.example.wearablesensorbase.GrapherActivity"
+            android:label="@string/title_activity_grapher"
+            android:parentActivityName="com.example.wearablesensorbase.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.wearablesensorbase.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.example.wearablesensorbase.ble.ConnectedDeviceActivity"
+            android:label="@string/title_activity_connected_devices"
+            android:parentActivityName="com.example.wearablesensorbase.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.wearablesensorbase.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.example.wearablesensorbase.ble.BLEScanActivity"
+            android:label="@string/title_activity_blescan"
+            android:parentActivityName="com.example.wearablesensorbase.ble.ConnectedDeviceActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.wearablesensorbase.ble.ConnectedDevicesActivity" />
+        </activity>
+        <activity
+            android:name="com.example.wearablesensorbase.ble.DeviceControlActivity"
+            android:label="@string/title_activity_device_control"
+            android:parentActivityName="com.example.wearablesensorbase.ble.ConnectedDeviceActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.wearablesensorbase.ble.ConnectedDeviceActivity" />
         </activity>
     </application>
 
