@@ -148,9 +148,10 @@ void writeToSerial(char text[], int length, float value)
     
 //    if (Serial1.available())
 //    {
+    if (Serial1) {
         Serial1.write(buffer);
         Serial1.flush();  
-//    }
+    }
 }
 
 void bleTransmitSensorData() 
@@ -207,7 +208,7 @@ void loop() {
     //normalise()
     bleTransmitSensorData();
    
-    delay(100);
+    delay(1000);
   }
 }
 

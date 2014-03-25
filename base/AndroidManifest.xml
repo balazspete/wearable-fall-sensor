@@ -72,6 +72,10 @@
             android:name="com.example.wearablesensorbase.data.LogViewActivity"
             android:label="@string/title_activity_log_view" >
         </activity>
+        <activity
+            android:name="com.example.wearablesensorbase.DecisionTreeTestActivity"
+            android:label="@string/title_activity_decision_tree_test" >
+        </activity>
     </application>
 
 </manifest>
