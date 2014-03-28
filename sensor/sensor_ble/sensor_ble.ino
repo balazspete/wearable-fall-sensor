@@ -26,6 +26,8 @@ float Ax,Ay,Az;//Unit g(9.8m/s^2)
 float Gx,Gy,Gz;//Unit ��/s
 float loudness;
 
+int measurementMode = 0;
+
 void initialiseAccelerationAndGyro() {
    // Initializing IMU sensor
    accelgyro.initialize();
@@ -110,6 +112,7 @@ int dToBuffer(float value, char* buffer, int start)
       {
         buffer[start++] = '0';
       } 
+
       buffer[start++] = '.';
     }
   }
@@ -130,60 +133,32 @@ int copyOver(char origin[], char target[], unsigned int size, unsigned int start
     return start+index;
 }
 
-void writeToSerial(char text[], int length, float value)
-{
-    char buffer [length + 10];
-    buffer[0] = *"#";
-    copyOver(text, buffer, length, 1);
-    int index = dToBuffer(value, buffer, length+1);
-    buffer[index] = *"#";
-    buffer[index+1] = '\0';
-    
-//    if (Serial.available())
-//    {
-//        Serial.write(buffer);
-//        Serial.flush();  
-//        Serial.println();
-//    }
-    
-//    if (Serial1.available())
-//    {
-        Serial1.write(buffer);
-        Serial1.flush();  
-//    }
-}
-
 void bleTransmitSensorData() 
 {
-    char text[] = { 'A', 'X', ':' };
-    writeToSerial(text, 3, Ax);
-    delay(5);
-    
-    text[1] = 'Y';
-    writeToSerial(text, 3, Ay);
-    delay(5);
-    
-    text[1] = 'Z';
-    writeToSerial(text, 3, Az);
-    delay(5);
-    
-    text[0] = 'G';
-    text[1] = 'X';
-    writeToSerial(text, 3, Gx);
-    delay(5);
-    
-    text[1] = 'Y';
-    writeToSerial(text, 3, Gy);
-    delay(5);
-    
-    text[1] = 'Z';
-    writeToSerial(text, 3, Gz);
-    delay(5);
-    
-    text[0] = 'L';
-    text[1] = 'O';
-    writeToSerial(text, 3, loudness);
-    delay(5);
+  char buffer [100];
+  int start = 0;
+
+  char text[] = { '#', 'M', 'E', 'A', 'S', 'U', 'R', 'E', 'M', 'E', 'N', 'T', '|' };
+
+  start = copyOver(text, buffer, 13, start);
+  start = dToBuffer(Ax, buffer, start);
+  buffer[start++] = '|';
+  start = dToBuffer(Ay, buffer, start);
+  buffer[start++] = '|';
+  start = dToBuffer(Az, buffer, start);
+  buffer[start++] = '|';
+  start = dToBuffer(Gx, buffer, start);
+  buffer[start++] = '|';
+  start = dToBuffer(Gy, buffer, start);
+  buffer[start++] = '|';
+  start = dToBuffer(Gz, buffer, start);
+  buffer[start++] = '|';
+  start = dToBuffer(loudness, buffer, start);
+  buffer[start++] = '#';
+  buffer[start] = '\0';
+
+  Serial1.write(buffer);
+  Serial1.flush();
 }
 
 void setup() {
@@ -193,7 +168,6 @@ void setup() {
     // Connect to the BLE module
     Serial1.begin(38400);
    
-   
     Wire.begin();
     
     initialiseAccelerationAndGyro();
@@ -201,11 +175,26 @@ void setup() {
 }
 
 void loop() {
-  while(true) {
-    updateAccelerationAndGyro();
-    updateLoudness();
-    //normalise()
-    bleTransmitSensorData();
+  while (true) {
+    if (Serial1.available())
+    {
+      measurementMode = Serial1.read();
+    }
+    
+    //If greater than 0 => take measurement
+    if (measurementMode > 48)
+    {
+      updateAccelerationAndGyro();
+      updateLoudness();
+      //normalise()
+      bleTransmitSensorData();
+    }
+    
+    // if measurement mode is 1 => one measurement only
+    if (measurementMode < 50)
+    {
+      measurementMode = 0;
+    }
    
     delay(100);
   }
