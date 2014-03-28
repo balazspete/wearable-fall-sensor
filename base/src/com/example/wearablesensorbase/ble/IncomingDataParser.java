@@ -1,5 +1,6 @@
 package com.example.wearablesensorbase.ble;
 
+import java.io.UnsupportedEncodingException;
 import java.util.concurrent.ConcurrentHashMap;
 
 import android.util.Log;
@@ -34,18 +35,30 @@ public abstract class IncomingDataParser {
 	public class DataParserHelper {
 		
 		private String connection;
-		private StringBuilder buffer;
+		private StringBuffer buffer;
 		
 		public DataParserHelper(String connection) {
 			this.connection = connection;
+			buffer = new StringBuffer();
 		}
 		
 		public void parse(IncomingDataParser parser, byte[] data) {
-			buffer.append(data.toString());
+			try {
+				buffer = buffer.append(new String(data, "UTF-8"));
+			} catch (UnsupportedEncodingException e) {
+				System.err.println("IncomingDataParser|parse: Input data is not a string");
+				return;
+			}
 			
 			String section;
 			synchronized (this) {
-				int end = buffer.lastIndexOf("##");
+				int end = buffer.lastIndexOf("#");
+				if (end < 0) {
+					System.err.println(buffer);
+					System.err.println("IncomingDataParser|parse: No measurement in buffer");
+					return;
+				}
+				
 				section = buffer.substring(0, end);
 				buffer = buffer.delete(0, end);
 			}
@@ -60,8 +73,13 @@ public abstract class IncomingDataParser {
 		}
 		
 		private SensorMeasurement parseMeasurement(String data) {
+			if (data == null || data.length() == 0) {
+				return null;
+			}
+			
 			String[] chunks = data.replaceAll("#", "").split("\\|");
 			if (chunks.length < 8 || !chunks[0].startsWith("MEASUREMENT")) {
+				System.err.println("IncomingDataParser|parseMeasurement: Malformed measurement");
 				return null;
 			}
 			
