@@ -1,134 +1,92 @@
 package com.example.wearablesensorbase.ble;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
+
+import android.util.Log;
 
 import com.example.wearablesensorbase.data.SensorMeasurement;
 
 public abstract class IncomingDataParser {
 	
-	private HashMap<String, ParserHelper> helpers;
-	private String leftover;
+	ConcurrentHashMap<String, DataParserHelper> parsers;
 	
 	public IncomingDataParser() {
-		helpers = new HashMap<String, ParserHelper>();
-		leftover = "";
+		parsers = new ConcurrentHashMap<String, IncomingDataParser.DataParserHelper>();
 	}
 
-	public void parse(String connection, byte[] data) {
-		ParserHelper helper = helpers.get(connection);
-		if (helper == null) {
-			helper = new ParserHelper(connection);
-			helpers.put(connection, helper);
-		}
-		
-		String[] chunks = (leftover + new String(data)).split("#");
-		
-		for (int i = 0; i < chunks.length-1; i++) {
-			String chunk = chunks[i];
-			if (chunk.isEmpty()) {
-				continue;
-			}
-			
-			helper.storeChunk(chunk);
-			
-			String[] values = helper.getValues();
-			if (values != null) {
-				createMeasurement(connection, values);
-				helper.reset();
-			}
-		}
-		
-		leftover = chunks[chunks.length-1];
-	}
-	
 	public abstract void handleSensorMeasurement(String connection, SensorMeasurement measurement);
 	
-	private void createMeasurement(String connection, String[] message) {
-		double[] values = new double[7];
-		
-		for (int i = 0; i < 7; i++) {
-			try {
-				values[i] = Double.parseDouble(message[i+1]);
-			} catch (ArrayIndexOutOfBoundsException e) {
-				values[i] = 0;
-			}
-		}
-		
-		SensorMeasurement measurement = new SensorMeasurement(System.currentTimeMillis(), 
-				values[0], values[1], values[2],
-				values[3], values[4], values[5], 
-				values[6]);
-		
-		handleSensorMeasurement(connection, measurement);
+	public void parse(String connection, byte[] data) {
+		DataParserHelper helper = getDataParserHelper(connection);
+		helper.parse(this, data);
 	}
 	
-	private class ParserHelper {
+	private DataParserHelper getDataParserHelper(String connection) {
+		DataParserHelper helper = parsers.get(connection);
+		if (helper == null) {
+			helper = new DataParserHelper(connection);
+			parsers.put(connection, helper);
+		}
 		
-		public final String connection;
-		private String
-			ax, ay, az,
-			gx, gy, gz, 
-			lo;
+		return helper;
+	}
+	
+	public class DataParserHelper {
 		
-		public ParserHelper(String connection) {
+		private String connection;
+		private StringBuilder buffer;
+		
+		public DataParserHelper(String connection) {
 			this.connection = connection;
 		}
 		
-		public synchronized void storeChunk(String chunk) {
-			String value = chunk.substring(3);
-			if (chunk.startsWith("A")) {
-				if (chunk.startsWith("X", 1)) {
-					ax = value;
-				} else if (chunk.startsWith("Y", 1)) {
-					ay = value;
-				} else if (chunk.startsWith("Z", 1)) {
-					az = value;
+		public void parse(IncomingDataParser parser, byte[] data) {
+			buffer.append(data.toString());
+			
+			String section;
+			synchronized (this) {
+				int end = buffer.lastIndexOf("##");
+				section = buffer.substring(0, end);
+				buffer = buffer.delete(0, end);
+			}
+			
+			String[] chunks = section.split("#");
+			for (String chunk : chunks) {
+				SensorMeasurement measurement = parseMeasurement(chunk);
+				if (measurement != null) {
+					parser.handleSensorMeasurement(connection, measurement);
 				}
-			} else if (chunk.startsWith("G")) {
-				if (chunk.startsWith("X", 1)) {
-					gx = value;
-				} else if (chunk.startsWith("Y", 1)) {
-					gy = value;
-				} else if (chunk.startsWith("Z", 1)) {
-					gz = value;
-				}
-			} else if (chunk.startsWith("LO")) {
-				lo = value;
 			}
 		}
 		
-		public boolean isReady() {
-			return ax != null && ay != null && az != null &&
-					gx != null && gy != null && gz != null &&
-					lo != null;
-		}
-		
-		public String[] getValues() {
-			if (!isReady()) {
+		private SensorMeasurement parseMeasurement(String data) {
+			String[] chunks = data.replaceAll("#", "").split("\\|");
+			if (chunks.length < 8 || !chunks[0].startsWith("MEASUREMENT")) {
 				return null;
 			}
 			
-			String[] values = new String[]{
-				ax, ay, az,
-				gx, gy, gz, 
-				lo
-			};
-			
-			return values;
+			try {
+				double accelerationX = Double.parseDouble(chunks[1]);
+				double accelerationY = Double.parseDouble(chunks[2]);
+				double accelerationZ = Double.parseDouble(chunks[3]);
+				
+				double orientationX = Double.parseDouble(chunks[4]);
+				double orientationY = Double.parseDouble(chunks[5]);
+				double orientationZ = Double.parseDouble(chunks[6]);
+				
+				double loudness = Double.parseDouble(chunks[7]);
+				
+				SensorMeasurement measurement = 
+					new SensorMeasurement(System.currentTimeMillis(), 
+						accelerationX, accelerationY, accelerationZ, 
+						orientationX, orientationY, orientationZ, 
+						loudness);
+				
+				return measurement;
+			} catch (NumberFormatException e) {
+				Log.e("IncomingDataParser", "Failed to parse measurement: " + e.getMessage());
+				return null;
+			}
 		}
-		
-		public void reset() {
-			ax = null;
-			ay = null;
-			az = null;
-			
-			gx = null;
-			gy = null;
-			gz = null;
-			
-			lo = null;
-		}
-		
 	}
-	
 }
