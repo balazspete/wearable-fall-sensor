@@ -120,6 +120,9 @@ public class WearableSensorBase extends Application {
 	public void calibrateDeviceInDirection(String connectionID, Step step, SensorMeasurement one, SensorMeasurement two) {
 		Calibration c = calibrations.get(connectionID);
 		switch (step) {
+			case INITIAL:
+				c.initialise(one);
+				break;
 			case FORWARD:
 				c.callibrateForwards(one, two);
 				break;

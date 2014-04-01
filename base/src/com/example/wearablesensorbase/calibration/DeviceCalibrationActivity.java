@@ -30,6 +30,7 @@ public class DeviceCalibrationActivity extends Activity {
 	
 	private int currentState = -1;
 	private Step[] steps = { 
+		Step.INITIAL,
 		Step.FORWARD, 
 		Step.BACKWARD, 
 		Step.LEFTWARD, 
@@ -270,14 +271,19 @@ public class DeviceCalibrationActivity extends Activity {
 	}
 	
 	private void showInstructionsOnScreen() {
-		TextView text = (TextView) findViewById(R.id.main_instruction);
-		text.setText("Move " + steps[currentState].toString());
-		
-		text = (TextView) findViewById(R.id.mini_instruction_above);
-		text.setText("Calibration step " + currentState + " out of " + steps.length);
-		
-		text = (TextView) findViewById(R.id.mini_instruction_below);
-		text.setText("Get all sensors to green");
+		if (currentState < steps.length) {
+			TextView text = (TextView) findViewById(R.id.main_instruction);
+			text.setText("Move " + steps[currentState].toString());
+			
+			text = (TextView) findViewById(R.id.mini_instruction_above);
+			text.setText("Calibration step " + (currentState + 1) + " out of " + steps.length);
+			
+			text = (TextView) findViewById(R.id.mini_instruction_below);
+			text.setText("Get all sensors to green");
+		} else {
+			TextView text = (TextView) findViewById(R.id.mini_instruction_above);
+			text.setText("Calibration complete!");
+		}
 	}
 	
 }
