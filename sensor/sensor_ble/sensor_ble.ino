@@ -187,16 +187,25 @@ void loop() {
       updateAccelerationAndGyro();
       updateLoudness();
       //normalise()
-      bleTransmitSensorData();
+      
+      // If measurement mode is 2 or less, do not buffer
+      if (measurementMode <= 50)
+      {
+        bleTransmitSensorData();
+      }
+      else
+      {
+        //buffer measurement and send when buffer is full
+      }
     }
     
-    // if measurement mode is 1 => one measurement only
+    // if measurement mode is 1 (49) => one measurement only
     if (measurementMode < 50)
     {
       measurementMode = 0;
     }
    
-    delay(100);
+    delay(50);
   }
 }
 
