@@ -2,9 +2,12 @@ package com.example.wearablesensorbase.data;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.wearablesensorbase.WearableSensorBase;
 import com.example.wearablesensorbase.events.MeasurementEvent;
@@ -54,19 +57,26 @@ public class BufferedMeasurementSaver {
 		writeToFile(file, statement);
 	}
 	
+	private static String timestamp;
 	public static String getFileName(String sensor) {
-		return sensor.replaceAll("(:|\\s)", "_");
+		String filename = sensor.replaceAll("(:|\\s)", "_");
+		if (timestamp == null) {
+			timestamp = "" + System.currentTimeMillis();
+		}
+		
+		return filename + "_" + timestamp;
 	}
 	
 	private synchronized void writeToFile(File file, String out) {
 		try {
-			System.out.println(file);
-			FileOutputStream output = new FileOutputStream(file);
-			output.write(out.getBytes());
-			output.close();
-		} catch (Exception e) {
-			e.printStackTrace();
+			FileWriter writer = new FileWriter(file, true);
+			writer.append(out);
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			Log.e("BufferedMeasurementSaver", "Failed to write to file");
 		}
+		
 	}
 	
 }

@@ -35,9 +35,17 @@ public class MainActivity extends Activity {
 			case R.id.action_calibrate:	
 				calibrateDevice();
 				return true;
+			case R.id.action_logs:
+				showLogs();
+				return true;
 			default: 
 				return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	private void showLogs() {
+		Intent intent = new Intent(this, LogListActivity.class);
+		startActivity(intent);
 	}
 
 	private void openGrapher() {

@@ -72,6 +72,14 @@
             android:name="com.example.wearablesensorbase.data.LogViewActivity"
             android:label="@string/title_activity_log_view" >
         </activity>
+        <activity
+            android:name="com.example.wearablesensorbase.LogListActivity"
+            android:label="@string/title_activity_log_list"
+            android:parentActivityName="com.example.wearablesensorbase.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.wearablesensorbase.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
