@@ -183,5 +183,12 @@ public class WearableSensorBase extends Application {
 			public void onConnectionCharacteristicChange(BLEConnectionEvent event) { }
 		});
 	}
+
+	/**
+	 * @return the measurementSaver
+	 */
+	public BufferedMeasurementSaver getMeasurementSaver() {
+		return measurementSaver;
+	}
 	
 }

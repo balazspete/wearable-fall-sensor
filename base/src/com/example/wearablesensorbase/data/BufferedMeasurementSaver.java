@@ -19,6 +19,7 @@ public class BufferedMeasurementSaver {
 	private MeasurementEventListener listener;
 	
 	private HashMap<String, File> files;
+	private HashMap<String, Integer> writeCount;
 	
 	public BufferedMeasurementSaver(WearableSensorBase app) {
 		this.app = app;
@@ -36,17 +37,16 @@ public class BufferedMeasurementSaver {
 	}
 	
 	public void writemeasurementToFile(String sensor, SensorMeasurement measurement) {
-		File file = files.get(sensor);
-		if (file == null) {
-			file = new File(app.getExternalFilesDir(null), getFileName(sensor));
-			file.setReadable(true, false);
-			files.put(sensor, file);
-		}
-		
-		writeToFile(file, measurement.toString());
+		File file = getFile(sensor);
+		writeToFile(sensor, file, measurement.toString());
 	}
 	
 	public void writeStatementToFile(String sensor, String statement) {
+		File file = getFile(sensor);
+		writeToFile(sensor, file, statement);
+	}
+	
+	private File getFile(String sensor) {
 		File file = files.get(sensor);
 		if (file == null) {
 			file = new File(app.getExternalFilesDir(null), getFileName(sensor));
@@ -54,7 +54,24 @@ public class BufferedMeasurementSaver {
 			files.put(sensor, file);
 		}
 		
-		writeToFile(file, statement);
+		return file;
+	}
+	
+	private int MAX = 10;
+	private boolean shouldFlush(String sensor) {
+		Integer count = writeCount.get(sensor);
+		if (count == null) {
+			writeCount.put(sensor, 1);
+			return 1 >= MAX;
+		}
+		
+		return count >= MAX;
+	}
+	
+	public void writeStatementsToFile(String statement) {
+		for (String sensor : files.keySet()) {
+			writeStatementToFile(sensor, statement);
+		}
 	}
 	
 	private static String timestamp;
@@ -67,7 +84,7 @@ public class BufferedMeasurementSaver {
 		return filename + "_" + timestamp;
 	}
 	
-	private synchronized void writeToFile(File file, String out) {
+	private synchronized void writeToFile(String sensor, File file, String out) {
 		try {
 			FileWriter writer = new FileWriter(file, true);
 			writer.append(out);

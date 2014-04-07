@@ -52,14 +52,14 @@
         android:id="@+id/sensor_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/button1"
+        android:layout_above="@+id/button_fall"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/instructions_panel" >
 
     </ListView>
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/button_fall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/progressBar1"

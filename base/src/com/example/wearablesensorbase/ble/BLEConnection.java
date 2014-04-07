@@ -17,6 +17,12 @@ import android.util.Log;
 
 public class BLEConnection {
 	
+	public static final byte[] 
+		STOP_DATA = { '0' }, 
+		ONE_DATA = { '1' }, 
+		NON_STOP_DATA = { '2' }, 
+		BUFFERED_NON_STOP_DATA = { '3' };
+	
 	public enum State {
 		CONNECTING, CONNECTED, DISCONNECTING, DISCONNECTED
 	}

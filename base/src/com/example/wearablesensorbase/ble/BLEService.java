@@ -224,4 +224,10 @@ public class BLEService extends Thread {
 		handler.write(connection, data);
 	}
 	
+	public void writeDataToAllBLEConnections(byte[] data) {
+		for (BLEConnection connection : connections.values()) {
+			handler.write(connection, data);
+		}
+	}
+	
 }

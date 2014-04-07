@@ -159,12 +159,15 @@ public class DeviceCalibrationActivity extends Activity {
 		calibrating = true;
 		invalidateOptionsMenu();
 		
+		BLEService.getInstance().writeDataToAllBLEConnections(BLEConnection.NON_STOP_DATA);
+		
 		currentState = 0;
 		beginCalibrationStep();
 	}
 	
 	private void stopCalibration() {
 		calibrating = false;
+		BLEService.getInstance().writeDataToAllBLEConnections(BLEConnection.STOP_DATA);
 		invalidateOptionsMenu();
 	}
 	
