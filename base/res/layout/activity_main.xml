@@ -50,4 +50,14 @@
         android:onClick="onClick"
         android:text="Stop" />
 
+    <Button
+        android:id="@+id/button_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/button_jump"
+        android:layout_marginTop="60dp"
+        android:text="Start measurements" />
+
 </RelativeLayout>

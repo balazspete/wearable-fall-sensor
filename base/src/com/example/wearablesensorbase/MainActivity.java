@@ -97,6 +97,10 @@ public class MainActivity extends Activity implements OnClickListener {
 				begin = false;
 				BLEService.getInstance().writeDataToAllBLEConnections(BLEConnection.STOP_DATA);
 				break;
+			case R.id.button_start:
+				BLEService.getInstance().writeDataToAllBLEConnections(BLEConnection.NON_STOP_DATA);
+				Toast.makeText(this, "Starting sensors...", Toast.LENGTH_SHORT).show();
+				break;
 			default:
 				return;
 		}
