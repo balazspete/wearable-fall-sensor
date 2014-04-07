@@ -102,4 +102,28 @@ public class SensorMeasurement implements Serializable {
 		return out.toString();
 	}
 	
+	public String toJSON() {
+		StringBuilder out = new StringBuilder("{ \"measurement\": { \"acceleration\": {");
+		out.append("\"x\" :");
+		out.append(acceleration.x);
+		out.append(", \"y\" :");
+		out.append(acceleration.y);
+		out.append(", \"z\" :");
+		out.append(acceleration.z);
+		out.append("}, \"orientation\": {");
+		out.append("\"x\" :");
+		out.append(orientation.x);
+		out.append(", \"y\" :");
+		out.append(orientation.y);
+		out.append(", \"z\" :");
+		out.append(orientation.z);
+		out.append("}, \"loudness\": ");
+		out.append(loudness);
+		out.append("}, \"time\" :");
+		out.append(System.currentTimeMillis());
+		out.append("}");
+		
+		return out.toString();
+	}
+	
 }

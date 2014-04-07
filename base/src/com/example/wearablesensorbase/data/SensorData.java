@@ -60,4 +60,15 @@ public class SensorData extends GraphViewData implements Serializable {
 		
 		return out.toString();
 	}
+	
+	public String toJSON() {
+		StringBuilder out = new StringBuilder();
+		out.append("{\"original\":");
+		out.append(value);
+		out.append(", \"display\":");
+		out.append(displayValue);
+		out.append("}");
+		
+		return out.toString();
+	}
 }
