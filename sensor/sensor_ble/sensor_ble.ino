@@ -26,8 +26,13 @@ float Ax,Ay,Az;//Unit g(9.8m/s^2)
 float Gx,Gy,Gz;//Unit ��/s
 float loudness;
 
+char buffer [1000];
+
 int measurementMode = 0;
 
+/*
+ * Initialise the IMU
+ */
 void initialiseAccelerationAndGyro() {
    // Initializing IMU sensor
    accelgyro.initialize();
@@ -36,6 +41,9 @@ void initialiseAccelerationAndGyro() {
    Serial.println(accelgyro.testConnection() ? "IMU connection successful":"IMU connection failure");
 }
 
+/*
+ * Initialise the loudness sensor
+ */
 void initialiseLoudnessSensor()
 {
    Wire.beginTransmission(ADDR_ADC121);        // transmit to device
@@ -44,6 +52,9 @@ void initialiseLoudnessSensor()
    Wire.endTransmission();  
 }
 
+/*
+ * Update the acceleration and Orientation values
+ */
 void updateAccelerationAndGyro() {
    accelgyro.getMotion6(&ax,&ay,&az,&gx,&gy,&gz);//get the gyro and accelarator   
    //==========accelerator================================
@@ -56,6 +67,9 @@ void updateAccelerationAndGyro() {
    Gz=gz/131.00;
 }
 
+/*
+ * Update the loudness value
+ */
 void updateLoudness()
 {
     int getData;
@@ -74,6 +88,9 @@ void updateLoudness()
     }
 }
 
+/*
+ * Convert a double to a char array
+ */
 int dToBuffer(float value, char* buffer, int start)
 {
   int origin = start;
@@ -121,6 +138,9 @@ int dToBuffer(float value, char* buffer, int start)
   return start;
 }
 
+/*
+ * Utility to copy arrays
+ */
 int copyOver(char origin[], char target[], unsigned int size, unsigned int start)
 {
     int index = 0;
@@ -133,11 +153,16 @@ int copyOver(char origin[], char target[], unsigned int size, unsigned int start
     return start+index;
 }
 
-void bleTransmitSensorData() 
+/*
+ * Buffer the current sensor measurements
+ */
+int bufferSensorData(int start) 
 {
-  char buffer [100];
-  int start = 0;
-
+  if (start < 0) 
+  {
+    return -1;  
+  }
+  
   char text[] = { '#', 'M', 'E', 'A', 'S', 'U', 'R', 'E', 'M', 'E', 'N', 'T', '|' };
 
   start = copyOver(text, buffer, 13, start);
@@ -156,11 +181,30 @@ void bleTransmitSensorData()
   start = dToBuffer(loudness, buffer, start);
   buffer[start++] = '#';
   buffer[start] = '\0';
-
-  Serial1.write(buffer);
-  Serial1.flush();
+  
+  return start;
 }
 
+/*
+ * Transmit the buffer to the base
+ */
+boolean bleTransmitBuffer() 
+{
+  if (Serial1)
+  {
+    Serial1.write(buffer);
+    Serial1.flush();
+    return true;
+  }
+  else
+  {
+    return false;  
+  }
+}
+
+/*
+ * Initialise components and devices
+ */
 void setup() {
     // Console (remove when not used)
     Serial.begin(9600);
@@ -175,7 +219,8 @@ void setup() {
 }
 
 void loop() {
-  while (true) {
+  while (true) 
+  {
     if (Serial1.available())
     {
       measurementMode = Serial1.read();
@@ -186,16 +231,24 @@ void loop() {
     {
       updateAccelerationAndGyro();
       updateLoudness();
-      //normalise()
       
       // If measurement mode is 2 or less, do not buffer
       if (measurementMode <= 50)
       {
-        bleTransmitSensorData();
+        bufferSensorData(0);
+        while(!bleTransmitBuffer());
+        delay(50);
       }
       else
       {
-        //buffer measurement and send when buffer is full
+        /*
+        
+          BUFFER MEASUREMENTS AND SEND WHEN BUFFER IS FULL
+        
+        */
+        
+        //change delay to whatever you need
+        delay(50);
       }
     }
     
@@ -205,10 +258,8 @@ void loop() {
       measurementMode = 0;
     }
    
-    delay(50);
   }
 }
-
 
 
 
