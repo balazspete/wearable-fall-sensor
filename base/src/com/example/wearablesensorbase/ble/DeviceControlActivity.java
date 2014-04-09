@@ -1,9 +1,8 @@
 package com.example.wearablesensorbase.ble;
 
-import java.util.Arrays;
-
 import com.example.wearablesensorbase.R;
 import com.example.wearablesensorbase.ble.BLEConnection.State;
+import com.example.wearablesensorbase.data.LogViewActivity;
 import com.example.wearablesensorbase.events.BLEConnectionEvent;
 import com.example.wearablesensorbase.events.BLEConnectionEventListener;
 
@@ -161,6 +160,9 @@ public class DeviceControlActivity extends Activity {
 			case android.R.id.home:
 				NavUtils.navigateUpFromSameTask(this);
 				return true;
+			case R.id.action_open_logs:
+				openLog();
+				return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -181,7 +183,7 @@ public class DeviceControlActivity extends Activity {
 		}
 		
 		if (connection != null && connection.getLastData() != null) {
-			((EditText) findViewById(R.id.last_data)).setText(Arrays.toString(connection.getLastData()));
+			((EditText) findViewById(R.id.last_data)).setText(new String(connection.getLastData()));
 		}
 		
 		invalidateOptionsMenu();
@@ -206,4 +208,11 @@ public class DeviceControlActivity extends Activity {
 		byte[] message = box.getText().toString().getBytes();
 		BLEService.getInstance().writeDataToBLEConnection(connection, message);
 	}
+	
+	private void openLog() {
+		Intent intent = new Intent(this, LogViewActivity.class);
+		intent.putExtra(LogViewActivity.DEVICE_NAME, connection.getDevice().getAddress());
+		startActivity(intent);
+	}
+	
 }

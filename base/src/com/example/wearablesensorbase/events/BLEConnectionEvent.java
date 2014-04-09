@@ -21,6 +21,7 @@ public class BLEConnectionEvent extends Event {
 	
 	private BLEConnection connection;
 	public final Type type;
+	private byte[] data;
 	
 	/**
 	 * Create a new event
@@ -38,6 +39,14 @@ public class BLEConnectionEvent extends Event {
 	 */
 	public BLEConnection getConnection() {
 		return connection;
+	}
+	
+	public void putData(byte[] data) {
+		this.data = data;
+	}
+	
+	public byte[] getData() {
+		return data;
 	}
 	
 }

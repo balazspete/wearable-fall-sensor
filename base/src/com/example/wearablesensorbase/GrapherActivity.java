@@ -45,7 +45,7 @@ public class GrapherActivity extends FragmentActivity implements
 	private HashMap<String, DataSimulator> simulators;
 	
 	private String currentSensor;
-	private long timestamp = 0;
+	private long timestamp = System.currentTimeMillis();
 	
 	public static final int 
 		COLOR_ACCELERATION_X = Color.rgb(52, 152, 219),
@@ -118,9 +118,7 @@ public class GrapherActivity extends FragmentActivity implements
 	 * Set up the {@link android.app.ActionBar}.
 	 */
 	private void setupActionBar() {
-
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -184,7 +182,7 @@ public class GrapherActivity extends FragmentActivity implements
 		 * The fragment argument representing the section number for this
 		 * fragment.
 		 */
-		public static final int VIEWPORT_SIZE = 30;
+		public static final int VIEWPORT_SIZE = 30000; // 30 seconds
 		public static final String SENSOR_ID = "com.example.wearablesensorbase.sensor_id";
 		public static final String SENSOR_DATA = "com.example.wearablesensorbase.sensor_data";
 		public static final int MAX_MEASUREMENTS = 100; 

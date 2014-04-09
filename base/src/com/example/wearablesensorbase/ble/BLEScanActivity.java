@@ -55,6 +55,8 @@ public class BLEScanActivity extends ListActivity {
             finish();
             return;
         }
+        
+        scanBLE(true);
 	}
 	
 	@Override

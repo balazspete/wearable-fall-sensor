@@ -3,7 +3,14 @@
 
     <string name="app_name">Wearable Sensor Base</string>
     <string name="action_settings">Settings</string>
+    <string name="action_refresh">Reload</string>
+    <string name="action_share">Share</string>
+    <string name="action_logs">View logs</string>
+    <string name="action_delete">Delete</string>
     <string name="action_devices">BLE Devices</string>
+    <string name="action_calibrate">Calibrate system</string>
+    <string name="action_calibration_start">Start</string>
+    <string name="action_calibration_stop">Stop</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_scan_devices">BLE Scan</string>
     <string name="title_activity_grapher">Data Grapher</string>
@@ -31,12 +38,9 @@
     <string name="menu_stop">Stop</string>
     <string name="ble_not_supported">BLE not supported</string>
     <string name="title_activity_device_control">BLE Device Control</string>
-    
-    
     <string name="ble_device_name">Device name:</string>
     <string name="ble_device_addr">Address:</string>
     <string name="ble_bond_status">Bond status:</string>
-    
     <string name="ble_connect">Connect</string>
     <string name="ble_disconnect">Disconnect</string>
     <string name="ble_connected">Connected</string>
@@ -44,9 +48,12 @@
     <string name="ble_connecting">Connecting</string>
     <string name="ble_disconnecting">Disconnecting</string>
     <string name="ble_not_connected">Not Connected</string>
-    
     <string name="send">Send</string>
     <string name="message_hint">Enter message</string>
     <string name="last_data">Last received BYTE array from device</string>
+    <string name="title_activity_device_callibration">Device Callibration</string>
+    <string name="action_open_logs">Logs</string>
+    <string name="title_activity_log_view">LogViewActivity</string>
+    <string name="title_activity_log_list">LogListActivity</string>
 
 </resources>
