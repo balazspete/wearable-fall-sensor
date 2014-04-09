@@ -79,6 +79,10 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.wearablesensorbase.MainActivity" />
+            </activity>
+         <activity
+            android:name="com.example.wearablesensorbase.DecisionTreeTestActivity"
+            android:label="@string/title_activity_decision_tree_test" >
         </activity>
     </application>
 

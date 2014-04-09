@@ -189,4 +189,5 @@ public class WearableSensorBase extends Application {
 	public BufferedMeasurementSaver getMeasurementSaver() {
 		return measurementSaver;
 	}
+	
 }

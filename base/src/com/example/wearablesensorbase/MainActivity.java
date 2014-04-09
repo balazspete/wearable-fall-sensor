@@ -8,6 +8,7 @@ import com.example.wearablesensorbase.ble.ConnectedDeviceActivity;
 import com.example.wearablesensorbase.calibration.DeviceCalibrationActivity;
 import com.example.wearablesensorbase.data.BufferedMeasurementSaver;
 
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -71,7 +72,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		Intent intent = new Intent(this, DeviceCalibrationActivity.class);
 		startActivity(intent);
 	}
-
+	
 	private String statement;
 	
 	@Override

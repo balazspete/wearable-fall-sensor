@@ -29,6 +29,7 @@ public class DeviceCalibrationActivity extends Activity {
 	private HashMap<String, SensorMeasurement> firstMeasurements;
 	
 	private int currentState = -1;
+
 	private Step[] steps = {
 		Step.INITIAL,
 		Step.FORWARD, 

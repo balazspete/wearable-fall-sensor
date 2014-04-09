@@ -35,6 +35,5 @@ public interface BLEDeviceHandler {
 	 * Read the specified characteristic on the input connection
 	 * @param connection The connection
 	 * @param characteristic The characteristic
-	 */
-	public byte[] read(BLEConnection connection, BluetoothGattCharacteristic characteristic);
+	 */public byte[] read(BLEConnection connection, BluetoothGattCharacteristic characteristic);
 }

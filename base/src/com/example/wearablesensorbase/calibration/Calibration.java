@@ -7,7 +7,7 @@ public class Calibration {
 	public void initialise(SensorMeasurement initial) {
 		System.out.println("Initial measurement");
 	}
-	
+
 	public void callibrateLeftwards(SensorMeasurement first, SensorMeasurement second) {
 		System.out.println("Calibration: left");
 	}

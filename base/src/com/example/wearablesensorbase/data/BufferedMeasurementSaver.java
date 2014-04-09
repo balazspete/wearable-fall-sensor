@@ -19,6 +19,7 @@ public class BufferedMeasurementSaver {
 	private MeasurementEventListener listener;
 	
 	private HashMap<String, File> files;
+
 	private HashMap<String, Integer> writeCount;
 	
 	public BufferedMeasurementSaver(WearableSensorBase app) {

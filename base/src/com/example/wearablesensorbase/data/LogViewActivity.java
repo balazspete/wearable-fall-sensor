@@ -26,7 +26,7 @@ public class LogViewActivity extends Activity {
 		FILE_NAME = "com.example.wearablesensorbase.file_name";
 	
 	private String fileName;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -39,7 +39,6 @@ public class LogViewActivity extends Activity {
 			String deviceName = getIntent().getStringExtra(DEVICE_NAME);
 			this.fileName = BufferedMeasurementSaver.getFileName(deviceName);
 		}
-		
 	}
 
 	@Override
