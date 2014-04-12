@@ -3,7 +3,7 @@
 #include <Wire.h>
 #include <Streaming.h>
 #include <string.h>
-
+#include <math.h>
 //====the offset of gyro===========
 #define Gx_offset  -1.50
 #define Gy_offset  0
