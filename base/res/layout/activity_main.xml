@@ -58,6 +58,7 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/button_jump"
         android:layout_marginTop="60dp"
+        android:onClick="onClick"
         android:text="Start measurements" />
 
 </RelativeLayout>
