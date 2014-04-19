@@ -69,10 +69,11 @@ public class Detector {
 
 
 		//loudness DT
-		instancesL.add(HashMapAttributes.create("dbValue", 15).classification("NOT FALL"));
-		instancesL.add(HashMapAttributes.create("dbValue", 20).classification("NOT FALL"));
-		instancesL.add(HashMapAttributes.create("dbValue", 35).classification("FALL"));
-				
+		instancesL.add(HashMapAttributes.create("dbValue", 35).classification("NOT FALL"));
+		instancesL.add(HashMapAttributes.create("dbValue", 55).classification("NOT FALL"));
+		instancesL.add(HashMapAttributes.create("dbValue", 65).classification("FALL"));
+		instancesL.add(HashMapAttributes.create("dbValue", 95).classification("FALL"));
+
 		TreeBuilder treeBuilder = new TreeBuilder();
 		Tree treeA = treeBuilder.buildPredictiveModel(instancesA);
 		Tree treeO = treeBuilder.buildPredictiveModel(instancesO);
@@ -102,7 +103,7 @@ public class Detector {
 			//acc4 = Math.sqrt((m4.acceleration.x.getY() * m4.acceleration.x.getY())+ (m4.acceleration.y.getY() * m4.acceleration.y.getY())+(m4.acceleration.z.getY() * m4.acceleration.z.getY()));
 			//acc5 = Math.sqrt((m5.acceleration.x.getY() * m5.acceleration.x.getY())+ (m5.acceleration.y.getY() * m5.acceleration.y.getY())+(m5.acceleration.z.getY() * m5.acceleration.z.getY()));
 			
-			ori1 = m1.orientation.x.getY() + m1.orientation.y.getY() + m1.orientation.z.getY();
+			ori1 = Math.abs(m1.orientation.x.getY()) + Math.abs(m1.orientation.y.getY()) + Math.abs(m1.orientation.z.getY());
 			
 			ld1 = m1.loudness.getY();
 			
@@ -125,7 +126,7 @@ public class Detector {
 			}
 		}
 		
-/*		
+			/*	DIFFERENT WAY -- AVOID FOR NOW	
 			final Set<Instance> instancesA = Sets.newHashSet();
 			final Set<Instance> instancesO = Sets.newHashSet();
 			final Set<Instance> instancesL = Sets.newHashSet();
