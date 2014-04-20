@@ -17,6 +17,11 @@ import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
 import android.util.Log;
 
+/**
+ * An object to manage all BLEcommunications
+ * @author Balazs Pete
+ *
+ */
 public class BLEService extends Thread {
 	
     private final static String TAG = BLEConnection.class.getSimpleName();
@@ -104,6 +109,7 @@ public class BLEService extends Thread {
 			}
 
 			listenerManager.send(event);
+			Log.d(TAG, "WOOT! Characteristic changed! :O");
 		}
 		
 		public void onServicesDiscovered(BluetoothGatt gatt, int status) {
@@ -131,6 +137,11 @@ public class BLEService extends Thread {
 	private ListenerManager<BLEConnectionEventListener, BLEConnectionEvent> listenerManager;
 	private BLEDeviceHandler handler;
 	
+	/**
+	 * Create a new service
+	 * @param application The creator
+	 * @param handler The BLEDevice handler to use
+	 */
 	private BLEService(WearableSensorBase application, BLEDeviceHandler handler) {
 		this.application = application;
 		this.connections = new HashMap<String, BLEConnection>();
@@ -165,35 +176,64 @@ public class BLEService extends Thread {
 		};
 	}
 	
+	/**
+	 * Create a connection to the input address
+	 * @param address The address
+	 * @return The connection
+	 */
 	public BLEConnection createConnection(String address) {
 		BLEConnection connection = new BLEConnection(address, gattCallback);
 		_connections.put(address, connection);
 		return connection;
 	}
 	
+	/**
+	 * Get a connection to the specified address (if existing)
+	 * @param address The address
+	 * @return The connection
+	 */
 	public BLEConnection getConnection(String address) {
 		return connections.get(address);
 	}
 	
+	/**
+	 * Severe and remove a BLE connection 
+	 * @param address The address
+	 */
 	public void deleteConnection(String address) {
 		BLEConnection connection = connections.get(address);
 		connection.disconnect();
 		connection.close();
 	}
 	
+	/**
+	 * Get all connections
+	 * @return The list of connections
+	 */
 	public List<BLEConnection> getConnections() {
 		return new ArrayList<BLEConnection>(connections.values());
 	}
 	
 	private static BLEService instance;
+	/**
+	 * Get the singleton instance of the service
+	 * @return The service
+	 */
 	public static BLEService getInstance() {
 		return instance;
 	}
 	
+	/**
+	 * Create a singleton instance of the service
+	 * @param application The creator
+	 * @param handler The BLE device handler to use
+	 * @return The service
+	 */
 	public static BLEService createInstance(WearableSensorBase application, BLEDeviceHandler handler) {
 		return instance = new BLEService(application, handler);
 	}
 
+	@Override
 	public void run() {
 		while(true) {
 			try {
@@ -204,12 +244,29 @@ public class BLEService extends Thread {
 		}
 	}
 	
+	/**
+	 * Add a BLEConnectionEvent listener to the service
+	 * @param listener The listener
+	 */
 	public void addEventListener(BLEConnectionEventListener listener) {
 		listenerManager.addEventListener(listener);
 	}
-	
+
+	/**
+	 * Remove a BLEConnectionEvent listener to the service
+	 * @param listener The listener
+	 */
 	public void removeEventListener(BLEConnectionEventListener listener) {
 		listenerManager.removeEventListener(listener);
+	}
+	
+	/**
+	 * Write the specified data to the BLE connection
+	 * @param connection The connection
+	 * @param data The data
+	 */
+	public void writeDataToBLEConnection(BLEConnection connection, byte[] data) {
+		handler.write(connection, data);
 	}
 	
 	private void discoverBLEServices(BLEConnection connection) {
@@ -220,9 +277,6 @@ public class BLEService extends Thread {
 		handler.setupDeviceConnection(connection);
 	}
 	
-	public void writeDataToBLEConnection(BLEConnection connection, byte[] data) {
-		handler.write(connection, data);
-	}
 	
 	public void writeDataToAllBLEConnections(byte[] data) {
 		for (BLEConnection connection : connections.values()) {

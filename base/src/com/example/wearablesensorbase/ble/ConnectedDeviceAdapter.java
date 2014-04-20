@@ -11,10 +11,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+/**
+ * An extension of the DeviceAdapter allowing to show additional information about connected devices
+ * @author Balazs Pete
+ *
+ */
 public class ConnectedDeviceAdapter extends DeviceAdapter {
 
 	private List<BLEConnection> connections;
 	
+	/**
+	 * Create an adapter
+	 * @param activity The creator
+	 */
 	public ConnectedDeviceAdapter(Activity activity) {
 		super(activity);
 		this.connections = new ArrayList<BLEConnection>();
@@ -37,8 +46,13 @@ public class ConnectedDeviceAdapter extends DeviceAdapter {
 		return view;
 	}
 
-	public BLEConnection getConnection(int arg0) {
-		return connections.get(arg0);
+	/**
+	 * Get the associated BLE connection
+	 * @param position The position
+	 * @return The connection
+	 */
+	public BLEConnection getConnection(int position) {
+		return connections.get(position);
 	}
 	
 	public int getPosition(String connectionID) {
@@ -52,6 +66,10 @@ public class ConnectedDeviceAdapter extends DeviceAdapter {
 		return -1;
 	}
 	
+	/**
+	 * Add a connection to the adapter
+	 * @param connection The connection
+	 */
 	public void addConnection(BLEConnection connection) {
 		this.connections.add(connection);
 		super.addDevice(connection.getDevice());
@@ -62,6 +80,7 @@ public class ConnectedDeviceAdapter extends DeviceAdapter {
 		throw new UnsupportedOperationException();
 	}
 	
+	@Override
 	public void clear() {
 		super.clear();
 		connections.clear();

@@ -18,12 +18,21 @@ public class DataSimulator extends Thread {
 	private boolean simulate = false;
 	private long time;
 	
+	/**
+	 * Create a data simulator
+	 * @param app The parent context
+	 * @param sensor The sensor's name
+	 * @param start the start time
+	 */
 	public DataSimulator(WearableSensorBase app, String sensor, long start) {
 		this.app = app;
 		sensorId = sensor.intern();
 		this.time = start;
 	}
 	
+	/**
+	 * Initiate a simulation
+	 */
 	public void simulate() {
 		while (simulate) {
 			SensorMeasurement dummyData = new SensorMeasurement(time++, 
@@ -46,14 +55,25 @@ public class DataSimulator extends Thread {
 		simulate();
 	}
 	
+	/**
+	 * Stop the simulation
+	 */
 	public void stopSimulator() {
 		simulate = false;
 	}
 	
+	/**
+	 * Determine whether the simulator is running
+	 * @return True if running
+	 */
 	public boolean isRunning() {
 		return simulate;
 	}
 	
+	/**
+	 * Get a random number
+	 * @return A random double
+	 */
 	public double getRandom() {
 		return Math.random();
 	}

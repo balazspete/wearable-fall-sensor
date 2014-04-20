@@ -19,6 +19,12 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.support.v4.app.NavUtils;
 
+/**
+ * An activity to scan for BLE devices
+ * Based on the android sample
+ * @author Balazs Pete
+ *
+ */
 public class BLEScanActivity extends ListActivity {
 
 	public static int SCAN_TIME = 10000;

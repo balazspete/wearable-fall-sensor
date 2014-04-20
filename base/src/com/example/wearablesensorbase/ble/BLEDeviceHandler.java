@@ -2,6 +2,12 @@ package com.example.wearablesensorbase.ble;
 
 import android.bluetooth.BluetoothGattCharacteristic;
 
+/**
+ * A description of a BLE device handler
+ * This allows for implementation of the BLE protocol (services and characteristics) specific to each individual device type
+ * @author Balazs Pete
+ *
+ */
 public interface BLEDeviceHandler {
 
 	/**
@@ -18,7 +24,17 @@ public interface BLEDeviceHandler {
 	 */
 	public void setupDeviceConnection(BLEConnection connection);
 	
+	/**
+	 * Write to the connection
+	 * @param connection The connection to write to
+	 * @param data The data to write
+	 */
 	public void write(BLEConnection connection, byte[] data);
 	
+	/**
+	 * Read the specified characteristic on the input connection
+	 * @param connection The connection
+	 * @param characteristic The characteristic
+	 */
 	public byte[] read(BLEConnection connection, BluetoothGattCharacteristic characteristic);
 }

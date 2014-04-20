@@ -33,6 +33,11 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+/**
+ * An activity allowing the drawing of the sensory inputs
+ * @author Balazs Pete
+ *
+ */
 public class GrapherActivity extends FragmentActivity implements
 		ActionBar.OnNavigationListener {
 
