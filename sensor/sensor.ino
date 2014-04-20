@@ -201,7 +201,7 @@ boolean bleTransmitBuffer()
   if (Serial1)
   {
     Serial1.write(buffer);
-    //Serial.println(buffer);
+    Serial.println(buffer);
     Serial1.flush();
     return true;
   }

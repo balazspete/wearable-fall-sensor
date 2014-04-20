@@ -13,11 +13,14 @@ import com.example.wearablesensorbase.data.SensorMeasurementSeries;
 import com.example.wearablesensorbase.detector.Detector;
 import com.example.wearablesensorbase.events.BLEConnectionEvent;
 import com.example.wearablesensorbase.events.BLEConnectionEventListener;
+import com.example.wearablesensorbase.events.FallEvent;
+import com.example.wearablesensorbase.events.FallEventListener;
 import com.example.wearablesensorbase.events.ListenerManager;
 import com.example.wearablesensorbase.events.MeasurementEvent;
 import com.example.wearablesensorbase.events.MeasurementEventListener;
 
 import android.app.Application;
+import android.util.Log;
 
 /**
  * Application for the WearableSensorBase project
@@ -96,6 +99,12 @@ public class WearableSensorBase extends Application {
 	
 	public void initializeDetector() {
 		detector = new Detector(calibrations, sensorData);
+		detector.addFallEventListener(new FallEventListener() {
+			@Override
+			public void onForwardFall(FallEvent event) {
+				Log.i("FALL", event.fallType.toString());
+			}
+		});
 	}
 
 	protected void setupSensorData() {
