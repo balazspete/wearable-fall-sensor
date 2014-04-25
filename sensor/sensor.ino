@@ -240,6 +240,7 @@ void loop() {
     {
       updateAccelerationAndGyro();
       updateLoudness();
+      //normalise()
       
       // If measurement mode is 2 or less, do not buffer
       if (measurementMode <= 50)
@@ -266,7 +267,6 @@ void loop() {
     {
       measurementMode = 0;
     }
-   
   }
 }
 
