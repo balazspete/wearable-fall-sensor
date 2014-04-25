@@ -7,6 +7,11 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.util.Log;
 
+/**
+ * An implementation of the BLEDeviceHandler specific to the Xadow BLESave
+ * @author Balazs Pete
+ *
+ */
 public class XadowBLEHandler implements BLEDeviceHandler {
 	
 	public static final String SERVICE = "0000fff0-0000-1000-8000-00805f9b34fb";

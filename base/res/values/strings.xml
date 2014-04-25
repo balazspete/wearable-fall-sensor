@@ -53,7 +53,7 @@
     <string name="last_data">Last received BYTE array from device</string>
     <string name="title_activity_device_callibration">Device Callibration</string>
     <string name="action_open_logs">Logs</string>
-    <string name="title_activity_log_view">LogViewActivity</string>
-    <string name="title_activity_log_list">LogListActivity</string>
+
+    <string name="title_activity_decision_tree_test">DecisionTreeTestActivity</string>
 
 </resources>

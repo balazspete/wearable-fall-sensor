@@ -2,6 +2,11 @@ package com.example.wearablesensorbase.events;
 
 import com.example.wearablesensorbase.ble.BLEConnection;
 
+/**
+ * An event describing a change in the contained BLEConnection
+ * @author Balazs Pete
+ *
+ */
 public class BLEConnectionEvent extends Event {
 
 	/**
@@ -18,11 +23,20 @@ public class BLEConnectionEvent extends Event {
 	public final Type type;
 	private byte[] data;
 	
+	/**
+	 * Create a new event
+	 * @param connection The associated connection
+	 * @param type The type of the event
+	 */
 	public BLEConnectionEvent(BLEConnection connection, Type type) {
 		this.connection = connection;
 		this.type = type;
 	}
 	
+	/**
+	 * Get the associated connection
+	 * @return The connection
+	 */
 	public BLEConnection getConnection() {
 		return connection;
 	}

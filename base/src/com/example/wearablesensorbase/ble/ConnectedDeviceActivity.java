@@ -16,6 +16,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.support.v4.app.NavUtils;
 
+/**
+ * An activity displaying all connected devices
+ * Modelled on the android sample
+ * @author Balazs Pete
+ *
+ */
 public class ConnectedDeviceActivity extends Activity {
 
 	private ConnectedDeviceAdapter adapter;
@@ -58,7 +64,7 @@ public class ConnectedDeviceActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void setupContentUI() {
+	private void setupContentUI() {
 		ListView list = ((ListView) findViewById(R.id.sensor_list));
 		adapter = new ConnectedDeviceAdapter(this);
 		list.setAdapter(adapter);
@@ -82,7 +88,7 @@ public class ConnectedDeviceActivity extends Activity {
 		reloadUI();
 	}
 	
-	public void reloadUI() {
+	private void reloadUI() {
 		adapter.clear();
 		
 		List<BLEConnection> connections = BLEService.getInstance().getConnections();

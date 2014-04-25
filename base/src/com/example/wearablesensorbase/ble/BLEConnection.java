@@ -15,6 +15,11 @@ import android.bluetooth.BluetoothGattService;
 import android.content.Context;
 import android.util.Log;
 
+/**
+ * An object representing a BLE Connection
+ * @author Balazs Pete
+ *
+ */
 public class BLEConnection {
 	
 	public static final byte[] 
@@ -35,6 +40,11 @@ public class BLEConnection {
 	private State state;
 	private byte[] lastData = new byte[]{};
 	
+	/**
+	 * Create a connection
+	 * @param address The MAC address of the device
+	 * @param gattCallback The GattCallback to be used
+	 */
 	public BLEConnection(String address, BluetoothGattCallback gattCallback) {
 		if (address == null || gattCallback == null) {
 			throw new NullPointerException("Parameters cannot be null");
@@ -45,6 +55,12 @@ public class BLEConnection {
 		this.state = State.DISCONNECTED;
 	}
 	
+	/**
+	 * try to connect to the device
+	 * @param context The android parent context
+	 * @param adapter The Bluetooth adapter to be used
+	 * @return true if successful
+	 */
 	public boolean connect(Context context, BluetoothAdapter adapter) {
 		if (adapter == null) {
 			Log.w(TAG, "Input BluetoothAdapter is null");
@@ -63,6 +79,9 @@ public class BLEConnection {
 		return true;
 	}
 	
+	/**
+	 * Disconnect from the device
+	 */
 	public void disconnect() {
 		if (bluetoothGatt == null) {
 			Log.w(TAG, "Bluetooth connection was not estabilished");
@@ -72,6 +91,10 @@ public class BLEConnection {
 		bluetoothGatt.disconnect();
 	}
 	
+	/**
+	 * Close the connection
+	 * Used to free up any resources taken up by the BLE connection
+	 */
 	public void close() {
 		if (bluetoothGatt == null) {
 			return;
@@ -81,6 +104,10 @@ public class BLEConnection {
 		bluetoothGatt = null;
 	}
 	
+	/**
+	 * Get the device associated with the connection
+	 * @return
+	 */
 	public BluetoothDevice getDevice() {
 		if (bluetoothGatt == null) {
 			return null;
@@ -89,10 +116,18 @@ public class BLEConnection {
 		return bluetoothGatt.getDevice();
 	}
 	
+	/**
+	 * Discover the services associated with the connection
+	 * You have to execute this method prior to using services
+	 */
 	public void discoverServices() {
 		bluetoothGatt.discoverServices();
 	}
 	
+	/**
+	 * Read the input characteristic on this connection
+	 * @param characteristic The characteristic
+	 */
 	public void readCharacteristic(BluetoothGattCharacteristic characteristic) {
 		if (bluetoothGatt == null) {
 			Log.w(TAG, "BLE connection was not initialised");
@@ -102,6 +137,10 @@ public class BLEConnection {
 		bluetoothGatt.readCharacteristic(characteristic);
 	}
 	
+	/**
+	 * Write to a specific characteristic
+	 * @param characteristic The characteristic
+	 */
 	public void writeCharacteristic(BluetoothGattCharacteristic characteristic) {
 		if (bluetoothGatt == null) {
 			Log.w(TAG, "BLE connection was not initialised");
@@ -112,6 +151,11 @@ public class BLEConnection {
 		bluetoothGatt.executeReliableWrite();
 	}
 	
+	/**
+	 * Enable or disable characteristics notifications
+	 * @param characteristic The characteristic
+	 * @param enabled True or false
+	 */
 	public void setCharacteristicNotification(BluetoothGattCharacteristic characteristic, boolean enabled) {
 		if (bluetoothGatt == null) {
 			Log.w(TAG, "BLE connection was not initialised");
@@ -121,6 +165,11 @@ public class BLEConnection {
 		bluetoothGatt.setCharacteristicNotification(characteristic, enabled);
 	}
 	
+	/**
+	 * Get the GATT service corresponding to the input UUID
+	 * @param uuid The UUID
+	 * @return The service or null if BLE was not initialised
+	 */
 	public BluetoothGattService getGattService(String uuid) {
 		if (bluetoothGatt == null) {
 			Log.w(TAG, "BLE connection was not initialised");
@@ -130,6 +179,10 @@ public class BLEConnection {
 		return bluetoothGatt.getService(UUID.fromString(uuid));
 	}
 	
+	/**
+	 * Get the list of all supported GATT services
+	 * @return The list of services or null if BLE was not initialised
+	 */
 	public List<BluetoothGattService> getSupportedGattServices() {
 		if (bluetoothGatt == null) {
 			Log.w(TAG, "BLE connection was not initialised");
@@ -139,10 +192,19 @@ public class BLEConnection {
 		return bluetoothGatt.getServices();
 	}
 	
+	/**
+	 * Write the specified descriptor to the gatt profile
+	 * @param descriptor The descriptor
+	 */
 	public void writeDescriptor(BluetoothGattDescriptor descriptor) {
 		bluetoothGatt.writeDescriptor(descriptor);
 	}
 	
+	/**
+	 * Get a string representation of the connection bond
+	 * @param bond The bond status number
+	 * @return The correcponding string 
+	 */
 	public static String getBondString(int bond) {
 		switch(bond) {
 			case BluetoothDevice.BOND_BONDED:
@@ -156,6 +218,7 @@ public class BLEConnection {
 	}
 
 	/**
+	 * Get the state of the connection
 	 * @return the state
 	 */
 	public State getState() {
@@ -163,12 +226,17 @@ public class BLEConnection {
 	}
 
 	/**
+	 * Set the state of the connection
 	 * @param state the state to set
 	 */
 	public void setState(State state) {
 		this.state = state;
 	}
 	
+	/**
+	 * Return the state of the connection as a string identifier
+	 * @return The ID
+	 */
 	public int getStateAsStringID() {
 		switch(state) {
 			case DISCONNECTED:

@@ -57,14 +57,17 @@ void initialiseLoudnessSensor()
  */
 void updateAccelerationAndGyro() {
    accelgyro.getMotion6(&ax,&ay,&az,&gx,&gy,&gz);//get the gyro and accelarator   
+   
+   Serial.println(ax);
+   
    //==========accelerator================================
-   Ax=ax/16384.00;//to get data of unit(g)
-   Ay=ay/16384.00;//to get data of unit(g)
-   Az=az/16384.00;//to get data of unit(g)
+   Ax=ax;///16384.00;//to get data of unit(g)
+   Ay=ay;///16384.00;//to get data of unit(g)
+   Az=az;///16384.00;//to get data of unit(g)
    //===============gyro================================
-   Gx=gx/131.00;
-   Gy=gy/131.00;
-   Gz=gz/131.00;
+   Gx=gx;///131.00;
+   Gy=gy;///131.00;
+   Gz=gz;///131.00;
 }
 
 /*
@@ -94,10 +97,10 @@ void updateLoudness()
 int dToBuffer(float value, char* buffer, int start)
 {
   int origin = start;
-  if (value >= 1000)
+  /*if (value >= 1000)
   {
     return -1;
-  }
+  }*/
   
   int mode = 0; 
   long v = (long)(value * 1000LL);
@@ -108,7 +111,7 @@ int dToBuffer(float value, char* buffer, int start)
     v = abs(v);
   }
   
-  int i = 6;
+  int i = 10;
   while (i > 0)
   {
     long b = pow(10, i--);
@@ -132,6 +135,11 @@ int dToBuffer(float value, char* buffer, int start)
 
       buffer[start++] = '.';
     }
+  }
+  
+  if (buffer[start-1] == '.')
+  {
+    buffer[start++] = '0';  
   }
   
   buffer[start] = '\0';
@@ -193,6 +201,7 @@ boolean bleTransmitBuffer()
   if (Serial1)
   {
     Serial1.write(buffer);
+    Serial.println(buffer);
     Serial1.flush();
     return true;
   }
@@ -231,6 +240,7 @@ void loop() {
     {
       updateAccelerationAndGyro();
       updateLoudness();
+      //normalise()
       
       // If measurement mode is 2 or less, do not buffer
       if (measurementMode <= 50)
@@ -257,7 +267,6 @@ void loop() {
     {
       measurementMode = 0;
     }
-   
   }
 }
 

@@ -7,5 +7,9 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry exported="true" kind="lib" path="GraphView-3.1.1.jar"/>
 	<classpathentry kind="lib" path="libs/guava-16.0.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/quickdt-0.1.4.9.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/slf4j-android-1.6.1-RC1.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/freetools-1.7.jar"/>
+	<classpathentry kind="lib" path="libs/javatuples-1.2.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

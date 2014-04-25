@@ -271,6 +271,7 @@ public class DeviceCalibrationActivity extends Activity {
 				Toast.makeText(a, "Calibration complete", Toast.LENGTH_LONG).show();
 			}
 		});
+		((WearableSensorBase) getApplication()).initializeDetector();
 	}
 	
 	private void showInstructionsOnScreen() {
